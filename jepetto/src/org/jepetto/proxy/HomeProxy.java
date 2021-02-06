@@ -47,18 +47,7 @@ public class HomeProxy {
 		return proxy;
 	}
 	
-	/*
-	static Facade arr[] = null;
-	static int count = 0;
-	static{
-		count = Integer.parseInt(reader.getProperty("bean_init_count"));
-		arr = new Facade[count];
-		for( int i = 0 ; i < arr.length ; i++){
-			arr[i] = new FacadeBean();
-		}
-		count = 0;
-	}
-	*/
+
 	
 	public Facade getFacade(){
 

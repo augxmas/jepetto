@@ -19,7 +19,20 @@ import org.xml.sax.SAXException;
 import org.jepetto.logger.DisneyLogger;
 import org.jepetto.util.Util;
 
+/*
+ * 
+import kr.co.comsquare.xFormsXmlLib.*;
+import kr.co.comsquare.db.*;
+import kr.co.comsquare.util.Tokenizer;
 
+�닔�젙 源�諛⑹쁺
+
+MySQL�뿉�꽌 alias瑜� �쐞�빐 
+getColumnName -> getColumnLabel
+
+TIMESTAMP �씪 寃쎌슦 .0�씠 異붽� 遺숇뒗 寃� �젣嫄�
+//
+*/
 public class XmlTransfer {
 
 	Category cat = DisneyLogger.getInstance(XmlTransfer.class.getName());	
@@ -33,31 +46,31 @@ public class XmlTransfer {
 	
 	  		// initiate meta data
 	  		x.createRootElement("recordset");
-	  		x.createSubElement("meta");
+	  		x.createSubElement("meta");//, attr,values);
 	  		for( int i = 0 ; i < count ; i++){
-	  			x.addChild("column",meta.getColumnLabel(i+1) ); 
+	  			//x.addChild(meta.getColumnName(i+1),meta.getColumnName(i+1) );
+	  			x.addChild("column",meta.getColumnLabel(i+1) ); // *  alias瑜� �쐞�빐 蹂�寃� */
 	  			x.addChild("type",meta.getColumnTypeName(i+1) );
+	  			//x.addChild("column", meta.getColumnName(i+1), new String[]{"type"}, new String[]{meta.getColumnTypeName(i+1)});
 	  		}
 	  		x.addChild("column_length", String.valueOf(count));
 	  		
 	  		// initiate raw data
-	  		String key = null;
-	  		String value = null;
 	  		while( rset.next()  ){
 	  			x.createSubElement("row");
 	  			for( int i = 1 ; i < count+1 ; i++){
 	  				
-	  				key = meta.getColumnLabel(i);
-					value = rset.getString(i);
-					
-					if(value!=null && value.length()>19 && meta.getColumnType(i) == Types.TIMESTAMP) { 
+	  				String key = meta.getColumnLabel(i);
+					String value = rset.getString(i);
+	  				
+					if(value!=null && value.length()>19 && meta.getColumnType(i) == Types.TIMESTAMP) { // 20160906 TIMESTAMP to String �뿉�꽌 �뮘�뿉 .0 �젣嫄�
 						value = value.substring(0, 19);
 					}
 	  				
 	  				x.addChild(key,value);
 	  			}
 	  		}
-
+	  		//x.addChild("row_length", String.valueOf(length));
   		}catch(SQLException e){
   			cat.error(e);
   		}finally{
@@ -76,10 +89,13 @@ public class XmlTransfer {
 	
 	  		// initiate meta data
 	  		x.createRootElement("recordset");
-	  		x.createSubElement("meta");
+	  		x.createSubElement("meta");//, attr,values);
 	  		for( int i = 0 ; i < count ; i++){
+	  			//x.addChild(meta.getColumnName(i+1),meta.getColumnName(i+1) );
 	  			x.addChild("column",meta.getColumnName(i+1) );
 	  			x.addChild("type",meta.getColumnTypeName(i+1) );
+	  			
+	  			//x.addChild("column", meta.getColumnName(i+1), new String[]{"type"}, new String[]{meta.getColumnTypeName(i+1)});
 	  		}
 	  		x.addChild("column_length", String.valueOf(count));
 	  		
@@ -91,17 +107,13 @@ public class XmlTransfer {
 	  			for( int i = 1 ; i < count+1 ; i++){
 	  				try{
 	  					x.addChild(meta.getColumnName(i),wrapper.getString(i));
-	  					
-	  	
-	  					
-	  					
 	  				}catch(SQLException e){
 	  					s = wrapper.getClob(columnIndex[k++]);
 	  					x.addChild(meta.getColumnName(i),s);
 	  				}
 	  			}
 	  		}
-
+	  		//x.addChild("row_length", String.valueOf(length));
   		}catch(SQLException e){
   			cat.error(e);
   		}finally{
@@ -140,6 +152,14 @@ public class XmlTransfer {
 	  			buffer.append("</column>");
 	  			buffer.append("\n");
 	  			columnNames[i] = meta.getColumnName(i+1);
+	  			/*
+	  			buffer.append("<type>");
+	  			buffer.append(meta.getColumnTypeName(i+1));
+	  			buffer.append("</type>");
+	  			buffer.append("<column type='");
+	  			buffer.append(meta.getColumnTypeName(i+1));
+	  			buffer.append("'>");	  			
+	  			*/
 	  		}
 			buffer.append("</meta>");
 			buffer.append("\n");
@@ -148,14 +168,16 @@ public class XmlTransfer {
 	  		
 	  		// initiate raw data 
 	  		while( rset.next()  ){
+	  			//x.createSubElement("row");
 				buffer.append("<row>");	  			
 	  			for( int i = 1 ; i < count+1 ; i++){
+	  				//x.addChild(meta.getColumnName(i),rset.getString(i));
 		  			buffer.append("<");
 		  			buffer.append(columnNames[i-1]);
 		  			buffer.append(">");
 		  			buffer.append("<![CDATA[");
-		  			buffer.append(rset.getString(i));
-		  			
+		  			//buffer.append(rset.getString(i));
+		  			buffer.append(Util.ko(rset.getString(i)));
 		  			buffer.append("]]>");
 		  			buffer.append("</");
 		  			buffer.append(columnNames[i-1]);
@@ -189,37 +211,49 @@ public class XmlTransfer {
 		_rset = _stmt.executeQuery();
 		
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("<?xml version='1.0' encoding='euc-kr'?>");
-
+		buffer.append("<?xml version='1.0' encoding='utf-8'?>");
+		//buffer.append("\n");
 		buffer.append("<recordset>");
-
+		//buffer.append("\n");
 		while( rset.next() ){
 			buffer.append("<row>");
+			//buffer.append("\n");
+			//for(int i = 0 ; i < size ; i++){
 			for(int i = 0 ;_rset.next() ; i++){
+
+				
 				buffer.append("<");
 				buffer.append(_rset.getString(i+1));
 				buffer.append(">");
 				buffer.append("<![CDATA[");
 				try{
-					buffer.append(Util.en(":"+rset.getString( _rset.getString(i+1)) )); 
+					buffer.append(rset.getString( _rset.getString(i+1) ) ); // �삤瑜�
 				}catch(NullPointerException e){
 					cat.debug(e.getMessage());
 				}
 				buffer.append("]]>");
 				buffer.append("</");
 				buffer.append(_rset.getString(i+1));
-				buffer.append(">");			
+				buffer.append(">");
+				//buffer.append("\n");				
 			}
 			buffer.append("</row>");
+			//buffer.append("\n");
 		}
 		buffer.append("</recordset>");
-
+		/*
+		stmt = con.prepareStatement("//recordset/meta");
+		rset = stmt.executeQuery();
+		while( rset.next()){
+			buffer.append(rset.getString("size"));
+		}//*/
 		
 		
 		return buffer.toString().trim();
 	}
 	
 	
+	//public String transferDom2String(Document doc, String columns[]) throws SQLException{
 	public String transferDom2String(Document doc) throws SQLException{
 		Connection con = new XmlConnection(doc);
 		PreparedStatement stmt = con.prepareStatement("//recordset/row");
@@ -233,9 +267,13 @@ public class XmlTransfer {
 		
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("<?xml version='1.0' encoding='utf-8'?>");
+		//buffer.append("\n");
 		buffer.append("<recordset>");
+		//buffer.append("\n");
 		while( rset.next() ){
 			buffer.append("<row>");
+			//buffer.append("\n");
+			//for(int i = 0 ; i < size ; i++){
 			for(int i = 0 ;_rset.next() ; i++){
 
 				
@@ -244,7 +282,7 @@ public class XmlTransfer {
 				buffer.append(">");
 				buffer.append("<![CDATA[");
 				try{
-					buffer.append(Util.ko( rset.getString( _rset.getString(i+1) ) ) ); 
+					buffer.append(Util.en( rset.getString( _rset.getString(i+1) ) ) ); // �삤瑜�
 				}catch(NullPointerException e){
 					cat.debug(e.getMessage());
 				}
@@ -252,11 +290,19 @@ public class XmlTransfer {
 				buffer.append("</");
 				buffer.append(_rset.getString(i+1));
 				buffer.append(">");
-			
+				//buffer.append("\n");				
 			}
 			buffer.append("</row>");
+			//buffer.append("\n");
 		}
 		buffer.append("</recordset>");
+		/*
+		stmt = con.prepareStatement("//recordset/meta");
+		rset = stmt.executeQuery();
+		while( rset.next()){
+			buffer.append(rset.getString("size"));
+		}//*/
+		
 		
 		return buffer.toString().trim();
 	}

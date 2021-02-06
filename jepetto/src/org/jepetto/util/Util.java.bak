@@ -52,7 +52,7 @@ public class Util {
 	
 	/**
 	 * 
-	 * ISO-8859-1 -> euc-kr으로 변경
+	 * ISO-8859-1 -> UTF-8으로 변경
 	 * 
 	 * @param s
 	 * @return
@@ -60,7 +60,7 @@ public class Util {
 	public static String utf8(String s){
 		String str = null;
 		try {
-			str = new String(s.getBytes("ISO-8859-1"),"euc-kr");
+			str = new String(s.getBytes("ISO-8859-1"),"UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -281,10 +281,22 @@ public class Util {
 		InputStream in = null;
 		
 		try{
-			res.setHeader( "Content-Type", "application/octet-stream; charset=euc-kr");
+		    
+		    //URL url = new URL(_url );//+ getMakeDownPath(barcode));
+			//HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+			//connection.setRequestMethod("POST");
+			//connection.setDoOutput(true);
+
+			
+			
+			//res.resetBuffer();
+			res.setHeader( "Content-Type", "application/octet-stream; charset=utf-8");
 			res.setHeader( "Content-Disposition", "attachment;filename=" + realName +";" );
 		    
 			out = res.getOutputStream();
+			
+			
+			//in = connection.getInputStream();
 			in = getInputStream(path,fileName);
 			
 			write(in,out);
@@ -459,8 +471,8 @@ public class Util {
     public static String unicode(String en){
         String ko=null;
         try{
-          //ko=new String(en.getBytes("8859_1"),"euc-kr");
-        	ko=new String(en.getBytes("euc-kr"),"8859_1");
+          //ko=new String(en.getBytes("8859_1"),"utf-8");
+        	ko=new String(en.getBytes("utf-8"),"8859_1");
         }catch(UnsupportedEncodingException e){
           e.printStackTrace();
         }
@@ -470,7 +482,7 @@ public class Util {
     public static String unicode(String en){
         String ko=null;
         try{
-          ko=new String(en.getBytes("8859_1"),"euc-kr");
+          ko=new String(en.getBytes("8859_1"),"utf-8");
         }catch(UnsupportedEncodingException e){
           e.printStackTrace();
         }

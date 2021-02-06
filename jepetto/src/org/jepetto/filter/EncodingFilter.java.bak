@@ -15,7 +15,7 @@ import javax.servlet.ServletResponse;
  * 			   display-name="Encoding Filter"
  * 	
  * @web.filter-init-param name="encoding"
- * 						  value="euc-kr"		    
+ * 						  value="utf-8"		    
  * 
  * @web.filter-mapping url-pattern="/*"
  * 

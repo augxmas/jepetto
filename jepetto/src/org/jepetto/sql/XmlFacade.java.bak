@@ -110,7 +110,8 @@ public class XmlFacade {
 	
 	public XmlFacade(){
 		SAXBuilder builder = new SAXBuilder();
-		factory = builder.getFactory();	
+		factory = builder.getFactory();
+		
 	}
 	
 
@@ -355,7 +356,7 @@ public class XmlFacade {
 	    
 		Format format = Format.getCompactFormat();
 		format.setLineSeparator("\n");
-		if( encoding == null ) encoding = "euc-kr";
+		if( encoding == null ) encoding = "utf-8";
 		format.setEncoding(encoding);
 	    out.setFormat(format);
 	    
@@ -396,7 +397,7 @@ public class XmlFacade {
 	        Transformer transformer = transformerFactory.newTransformer();
 	        transformer.setOutputProperty(OutputKeys.INDENT, "YES");
 	        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-	        transformer.setOutputProperty(OutputKeys.ENCODING, "euc-kr");
+	        transformer.setOutputProperty(OutputKeys.ENCODING, "utf-8");
 	        
 	        transformer.transform(new DOMSource(doc), new StreamResult(writer));
 			
