@@ -25,6 +25,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -38,10 +39,15 @@ import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.log4j.Category;
-
 import org.jepetto.logger.DisneyLogger;
 import org.jepetto.util.PropertyReader;
 import org.jepetto.util.Util;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+
+
 
 
 
@@ -146,7 +152,7 @@ public class MultiPartFilter  implements Filter {
         chain.doFilter(req, res);
 	}
 	
-    private void processFormField( ServletRequest req , FileItem item ,HashMap map){
+    private void processFormField( ServletRequest req , FileItem item ,HashMap<String,String> map){
     	
         String fieldname = item.getFieldName();
         
@@ -159,9 +165,6 @@ public class MultiPartFilter  implements Filter {
 			e.printStackTrace();
 		}
 
-        //value = value.replaceAll("<", "&lt;");
-        //value = value.replaceAll(">", "&gt;");
-		
 		Object o = null;
 		
 		if( map.containsKey(fieldname) ){
@@ -189,34 +192,71 @@ public class MultiPartFilter  implements Filter {
 	
 	private void processFormField( ServletRequest req ){
 		
-		Enumeration _enum	= req.getParameterNames();
-		String name			= null;
-
-		while(_enum != null && _enum.hasMoreElements()){
-			name = (String)_enum.nextElement();
-			String arr[] = req.getParameterValues(name);
+		if(req.getContentType()!= null && req.getContentType().equalsIgnoreCase("application/json")){
 			
-			try{
-				if(arr.length > 1){
-					req.setAttribute(name, arr);
-				}else{
-					req.setAttribute(name, arr[0]);
+			java.io.BufferedReader reader = null;
+			
+			JSONParser parser = new JSONParser();
+			Object obj;
+			
+			try {
+				reader = req.getReader();
+				String _temp = "";
+				StringBuffer buffer = new StringBuffer();
+				while(_temp != null) {
+					buffer.append(_temp);
+					_temp = reader.readLine();
 				}
-			}catch(java.lang.NullPointerException e){
-				req.setAttribute(name, null);
+
+				String jsonStr = buffer.toString();
+				obj = parser.parse( jsonStr );
+				JSONObject jsonObj = (JSONObject) obj;
+				Set <String>set = jsonObj.keySet();
+				java.util.Iterator<String> iter = set.iterator();
+				String name = null;
+				String value = null;
+				
+				while(iter.hasNext()) {
+					name = iter.next();
+					value = (String) jsonObj.get(name);
+					req.setAttribute(name, value);
+				}		
+			}catch(IOException e) {
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} else {
+		
+			Enumeration <String>_enum	= req.getParameterNames();
+			String name			= null;
+	
+			while(_enum != null && _enum.hasMoreElements()){
+				name = (String)_enum.nextElement();
+				String arr[] = req.getParameterValues(name);
+				
+				try{
+					if(arr.length > 1){
+						req.setAttribute(name, arr);
+					}else{
+						req.setAttribute(name, arr[0]);
+					}
+				}catch(java.lang.NullPointerException e){
+					req.setAttribute(name, null);
+				}
 			}
 		}
 		
 	}
 	
-    private void processFormField( ServletRequest req , FileItem item ){
-
+	/*
+	private void processFormField( ServletRequest req , FileItem item ){
         String fieldname = item.getFieldName();
 		String value = item.getString();
-		
 		req.setAttribute( fieldname , value );
-		
-    }
+    }//*/
 
     private void processUploadedFile( HttpServletRequest req , FileItem item ) throws IOException, FileUploadException {
 

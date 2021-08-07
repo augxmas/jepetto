@@ -31,12 +31,7 @@ public class PropertyReader implements java.io.Serializable
 		try
 		{
 			cat.debug("properties is loading.....");
-			
-			if(System.getProperty("jepetto.properties")!=null) {
-				load(System.getProperty("jepetto.properties"));
-			} else {
-				prop.load(this.getClass().getClassLoader().getResourceAsStream("/WEB-INF/jepetto.properties"));
-			}
+			load(System.getProperty("jepetto.properties"));
 			cat.info("properties loading is finished....");
 		}
 		catch(Exception e)

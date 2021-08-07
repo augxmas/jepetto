@@ -30,7 +30,6 @@ public class EncodingFilter implements Filter {
 	protected FilterConfig filterConfig = null;
 
 	public void init(FilterConfig filterConfig) throws ServletException {
-		
 		this.filterConfig = filterConfig;
 		this.encoding = filterConfig.getInitParameter("encoding");
 	}
