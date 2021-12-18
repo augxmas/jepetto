@@ -1,35 +1,34 @@
 package org.jepetto.logger;
 
-import org.apache.log4j.Category;
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
+//import org.apache.log4j.Category;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class DisneyLogger extends Category {
+public class DisneyLogger  {
 
 	private String className;
 	
-	public DisneyLogger(String className) {
-		super(className);
-		// TODO Auto-generated constructor stub
-		this.className = className;
-	}
+	private Logger logger = null;
 	
-	public Category getInstnce(Class cls){
-		return super.getInstance(cls);
+	public DisneyLogger(String cls){
+		this.className = cls;
+		this.logger = LogManager.getLogger(cls);
 	}
-	
-	public static Category getInstnce(String cls){
-		return getInstance(cls);
-	}
-	
+	//*/
 	
 	public void info(String msg){
-		super.info(className + " " + msg);
+		logger.info(className + " " + msg);
 	}
 
 	public void debug(String msg){
-		super.info(className + " " + msg);
+		logger.debug(className + " " + msg);
 	}	
+	
+	public void fatal(String msg){
+		logger.fatal(className + " " + msg);
+	}	
+	
 	/*
 	protected DisneyLogger(String arg0) {
 		super(arg0);
@@ -47,12 +46,9 @@ public class DisneyLogger extends Category {
 			buffer.append(ele[i]);
 			buffer.append("\n");
 		}
-		super.error(buffer.toString());
+		logger.error(buffer.toString());
 	}
 	
-	public void setLevel(Level level){
-		LogManager.getRootLogger().setLevel(level);
-	}
 	
 	
 }

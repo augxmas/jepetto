@@ -893,6 +893,7 @@ public class LoggableCallableStatement implements CallableStatement {
 				// catch this without whining, if this fails the only thing wrong is probably this class
 			}
 		}
+		System.out.println("query = " + "\n" + buf.toString().trim());
 		return buf.toString().trim();
 	}
 

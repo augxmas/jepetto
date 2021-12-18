@@ -8,10 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.log4j.Category;
 import org.jdom2.Document;
 import org.jepetto.logger.DisneyLogger;
+import org.jepetto.proxy.HomeProxy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -24,7 +23,7 @@ import org.json.JSONObject;
 
 public class JsonTransfer {
 	
-	Category cat = DisneyLogger.getInstance(JsonTransfer.class.getName());	
+	DisneyLogger cat = new DisneyLogger(HomeProxy.class.getName());	
 	
 	
 	

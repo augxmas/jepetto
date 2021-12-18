@@ -12,17 +12,18 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Category;
+
 import org.jdom2.Document;
 import org.xml.sax.SAXException;
 
 import org.jepetto.logger.DisneyLogger;
+import org.jepetto.proxy.HomeProxy;
 import org.jepetto.util.Util;
 
 
 public class XmlTransfer {
 
-	Category cat = DisneyLogger.getInstance(XmlTransfer.class.getName());	
+	DisneyLogger cat = new DisneyLogger(HomeProxy.class.getName());	
 	
 	public Document trasnferRset2Dom(ResultSet rset) throws SQLException{
 

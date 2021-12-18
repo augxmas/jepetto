@@ -16,6 +16,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.Region;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 /**
  * <pre>
@@ -683,8 +684,10 @@ public class XcelWriter {
 	* @exception
 	*/
 
-	public void mergeCell(Region region){
+	public void mergeCell(CellRangeAddress region){
 	  sheet.addMergedRegion(region);
+	  //sheet.addMergedRegionUnsafe((CellRangeAddress)region);
+	  
 	}
 
 	/**
@@ -697,7 +700,7 @@ public class XcelWriter {
 	* @exception
 	*/
 
-	public void mergeCell(HSSFSheet sheet, Region region){
+	public void mergeCell(HSSFSheet sheet, CellRangeAddress region){
 	  sheet.addMergedRegion(region);
 	}
 
@@ -713,9 +716,15 @@ public class XcelWriter {
 	* @exception
 	*/
 
+	/*
 	public Region getMergedRegion(int rowFrom, int colFrom, int rowTo, int colTo){
 	  return new Region(rowFrom,(short)colFrom,rowTo,(short)colTo);
+	}//*/
+	
+	public CellRangeAddress getMergedRegion(int rowFrom, int colFrom, int rowTo, int colTo){
+		  return new CellRangeAddress(rowFrom,(short)colFrom,rowTo,(short)colTo);
 	}
+	
 
 	/**
 	* 諛붾떏湲� �꽕�젙

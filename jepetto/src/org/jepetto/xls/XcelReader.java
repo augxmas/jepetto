@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
-import org.apache.log4j.Category;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -40,7 +39,7 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
  */
 public class XcelReader {
 	
-	Category cat = DisneyLogger.getInstance(XcelReader.class.getName());	
+	DisneyLogger cat = new DisneyLogger(XcelReader.class.getName());	
 	
 	/**
 	 * �씫�뼱�뱾�씪 excel臾몄꽌 寃쎈줈

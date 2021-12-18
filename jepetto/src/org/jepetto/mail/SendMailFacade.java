@@ -8,8 +8,8 @@ import java.io.*;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.activation.*;
-import org.apache.log4j.Category;
 import org.jepetto.logger.DisneyLogger;
+import org.jepetto.proxy.HomeProxy;
 import org.jepetto.sql.Wrapper;
 import org.jepetto.util.Util;
 
@@ -47,7 +47,7 @@ public class SendMailFacade
 {
 	
 	
-	Category cat = DisneyLogger.getInstance(SendMailFacade.class.getName());
+	DisneyLogger cat = new DisneyLogger(SendMailFacade.class.getName());
 	
 	private MimeMessage msg;
 	//private static PropertyReader reader = PropertyReader.getInstance();

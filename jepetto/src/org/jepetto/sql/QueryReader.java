@@ -6,17 +6,17 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Category;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.xpath.XPath;
-
+import org.jepetto.bean.FacadeBean;
 import org.jepetto.logger.DisneyLogger;
 import org.jepetto.util.PropertyReader;
 import org.jepetto.validator.ColumnValidator;
@@ -25,12 +25,6 @@ import org.json.JSONObject;
 
 /**
  * 
- * query xml로 부터 필요롤 하는 query를 읽어드림
- * 
- * @author umlkorea 김창호
- * 
- * 수정 2016.01.12 김방영 HashMap 쪽 옵션 및 order option 강화
- * 수정 2016.06.23 김방영 Columns 기능 추가, select 시 필드명 지정하여 사용 가능
  */
 public class QueryReader {
 
@@ -51,7 +45,7 @@ public class QueryReader {
 	
 	private ColumnValidator validators[];
 	
-	Category cat = DisneyLogger.getInstance(Wrapper.class.getName());
+	DisneyLogger cat = new DisneyLogger(QueryReader.class.getName());
 	
 	/*
 	static {
@@ -84,11 +78,11 @@ public class QueryReader {
 	}
 	
 	/**
-	 * 주어진 클래스의 이름에 해당하는 query xml 파일에서 주어진 key에 해당하는 query을 읽을 수 있는
-	 * instance를 생성
+	 * 二쇱뼱吏� �겢�옒�뒪�쓽 �씠由꾩뿉 �빐�떦�븯�뒗 query xml �뙆�씪�뿉�꽌 二쇱뼱吏� key�뿉 �빐�떦�븯�뒗 query�쓣 �씫�쓣 �닔 �엳�뒗
+	 * instance瑜� �깮�꽦
 	 * 
 	 * @param cls dao class
-	 * @param key 참조할 query key
+	 * @param key 李몄“�븷 query key
 	 * @throws JDOMException
 	 * @throws IOException
 	 */
@@ -108,11 +102,11 @@ public class QueryReader {
 
 	
 	/**
-	 * 주어진 경로에 해당하는  query xml 파일에서 주어진 key에 해당하는 query을 읽을 수 있는
-	 * instance를 생성
+	 * 二쇱뼱吏� 寃쎈줈�뿉 �빐�떦�븯�뒗  query xml �뙆�씪�뿉�꽌 二쇱뼱吏� key�뿉 �빐�떦�븯�뒗 query�쓣 �씫�쓣 �닔 �엳�뒗
+	 * instance瑜� �깮�꽦
 	 * 
-	 * @param path query xml 파일의 경로
-	 * @param key  참조할 query key
+	 * @param path query xml �뙆�씪�쓽 寃쎈줈
+	 * @param key  李몄“�븷 query key
 	 * @throws JDOMException
 	 * @throws IOException
 	 */
@@ -150,7 +144,7 @@ public class QueryReader {
 
 
 	/**
-	 * 반환할 query에 바인딩 도는 치환블록이 존재하지 않을 경우
+	 * 諛섑솚�븷 query�뿉 諛붿씤�뵫 �룄�뒗 移섑솚釉붾줉�씠 議댁옱�븯吏� �븡�쓣 寃쎌슦
 	 * 
 	 * @return query
 	 */
@@ -240,12 +234,12 @@ public class QueryReader {
 	}
 
 	/**
-	 * 해당 query에 존재하는 치환블럭을 주어진 값으로 대체하여 query 를 반환한다
-	 * @param table 치환될 값들
+	 * �빐�떦 query�뿉 議댁옱�븯�뒗 移섑솚釉붾윮�쓣 二쇱뼱吏� 媛믪쑝濡� ��泥댄븯�뿬 query 瑜� 諛섑솚�븳�떎
+	 * @param table 移섑솚�맆 媛믩뱾
 	 * @return
 	 */
 	
-	private String repl(String elName, String elValue, HashMap map, HashMap<String, String> params) {
+	private String repl(String elName, String elValue, Map map, Map<String, String> params) {
 		
 		String a = "'%#%'";
 		String b = "'%#'";
@@ -326,7 +320,7 @@ public class QueryReader {
 	}
 	
 	
-    public String getQuery(HashMap table, HashMap<String, String> retable){
+    public String getQuery(Map table, Map<String, String> retable){
     	
         String query = getQuery();
 		String key = null;
@@ -405,7 +399,7 @@ public class QueryReader {
 				}
 				try {
 					//query = query.replaceAll("%"+attr.getName()+"%",value);
-					query = replAll(query, "%"+attr.getName()+"%", value); // 2017.02.13 json 관련 $ 변환 문제 픽스 
+					query = replAll(query, "%"+attr.getName()+"%", value); // 2017.02.13 json 愿��젴 $ 蹂��솚 臾몄젣 �뵿�뒪 
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println("Error replace name with value");
@@ -503,7 +497,7 @@ public class QueryReader {
 					value = value.replaceAll("#", match );	
 				}
 	
-				value.replaceAll("'","&`");	// "'" 문자를 "&`"로 치환하여 저장, 값을 가져올때 다시 바꿔준다.
+				value.replaceAll("'","&`");	// "'" 臾몄옄瑜� "&`"濡� 移섑솚�븯�뿬 ���옣, 媛믪쓣 媛��졇�삱�븣 �떎�떆 諛붽퓭以��떎.
 	
 				sb.append("%");
 				sb.append(key);

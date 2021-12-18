@@ -5,15 +5,18 @@ import java.io.FileInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
-
-import org.apache.log4j.Category;
-
 import org.jepetto.logger.DisneyLogger;
-import org.jepetto.sql.Wrapper;
 import org.jepetto.util.PropertyReader;
-import org.jepetto.util.Util;
+//import org.jepetto.proxy.HomeProxy;
+//import org.jepetto.sql.Wrapper;
+//import org.jepetto.util.Util;
 
 public class FileInfo implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private String appid;
 
@@ -29,7 +32,7 @@ public class FileInfo implements Serializable{
 	
 	private String path = PropertyReader.getInstance().getProperty("savedRepository"); // 20161108 파일 저장위치가 tmp가 아닌 savedRepository임.
 	
-	Category cat = DisneyLogger.getInstance(Wrapper.class.getName()); 
+	DisneyLogger cat = new DisneyLogger(FileInfo.class.getName()); 
 	
 	public FileInfo(){}
 	
@@ -38,7 +41,7 @@ public class FileInfo implements Serializable{
 		this.renamed = renamed;
 		this.size = size;
 		this.uploaddt = uploaddt;
-		this.count = count; 
+		this.count = count;
 	}
 	
 	public FileInfo( String appid, String path, String original , String renamed , String size , String uploaddt, String count ){
@@ -132,8 +135,6 @@ public class FileInfo implements Serializable{
 	 * @throws IOException
 	 */	
 	public InputStream getInputStream() throws IOException{
-		//renamed = Util.ko(renamed); // 20161108 UTF8 환경에서 문제가 발생함. 주석처리
-		File file = new File(path,renamed);
 		InputStream in = new FileInputStream( new File(path,renamed));
 		return in;
 	}

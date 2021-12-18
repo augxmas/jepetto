@@ -5,17 +5,18 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.Map;
 
 import javax.naming.NamingException;
 
 
-import org.apache.log4j.Category;
+
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 
 
 import org.jepetto.logger.DisneyLogger;
+import org.jepetto.proxy.HomeProxy;
 
 
 /**
@@ -38,7 +39,7 @@ import org.jepetto.logger.DisneyLogger;
  */
 public class FacadeBean implements Facade{//extends SessionAdapter{
 
-	Category cat = DisneyLogger.getInstance(FacadeBean.class.getName());
+	DisneyLogger cat = new DisneyLogger(FacadeBean.class.getName());
 
 	
     /**
@@ -71,7 +72,7 @@ public class FacadeBean implements Facade{//extends SessionAdapter{
 
      
     
-	public Document executeQuery(String datasource, String file, String key, HashMap table, String arr[]) throws SQLException, NamingException, JDOMException, IOException{
+	public Document executeQuery(String datasource, String file, String key, Map table, String arr[]) throws SQLException, NamingException, JDOMException, IOException{
             
 		FacadeDAO dao = new FacadeDAO();
 		Document doc = null;
@@ -95,7 +96,7 @@ public class FacadeBean implements Facade{//extends SessionAdapter{
 		return doc;
 	}//*/
 	
-	public Document executeQuery(String datasource, String file, String key, HashMap table, String arr[], int clobColumnIndex[]) throws SQLException, NamingException, JDOMException, IOException{
+	public Document executeQuery(String datasource, String file, String key, Map table, String arr[], int clobColumnIndex[]) throws SQLException, NamingException, JDOMException, IOException{
         
 		FacadeDAO dao = new FacadeDAO();
 		Document doc = null;
@@ -179,7 +180,7 @@ public class FacadeBean implements Facade{//extends SessionAdapter{
 	 * @throws SystemException
 	 * @ejb.interface-method view-type = "remote"
 	 */
-	public int executeUpdate(String datasource, String file, String key, HashMap table, String arr[]) throws SQLException, NamingException, JDOMException, IOException {		
+	public int executeUpdate(String datasource, String file, String key, Map table, String arr[]) throws SQLException, NamingException, JDOMException, IOException {		
 		FacadeDAO dao = new FacadeDAO();
 		
 		int count = -1;
@@ -222,7 +223,7 @@ public class FacadeBean implements Facade{//extends SessionAdapter{
 	 * @throws SystemException
 	 * @ejb.interface-method view-type = "remote"
 	 */
-	public int executeUpdate(String datasource, String file, String key, HashMap table, String arr[][]) throws SQLException, NamingException, JDOMException, IOException {		
+	public int executeUpdate(String datasource, String file, String key, Map table, String arr[][]) throws SQLException, NamingException, JDOMException, IOException {		
 		FacadeDAO dao = new FacadeDAO();
 		
 		

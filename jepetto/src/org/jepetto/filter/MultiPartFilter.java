@@ -38,18 +38,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
-import org.apache.log4j.Category;
+//import org.apache.log4j.Category;
 import org.jepetto.logger.DisneyLogger;
+import org.jepetto.proxy.HomeProxy;
 import org.jepetto.util.PropertyReader;
 import org.jepetto.util.Util;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-
-
-
-
 
 /**
  * ServletRequest upload  Filter
@@ -62,12 +58,13 @@ import org.json.simple.parser.ParseException;
  * 
  * @web.filter-mapping url-pattern="/*"
  * 
+ * 
  * 					   
  */
 
 public class MultiPartFilter  implements Filter {
 	
-	Category cat = DisneyLogger.getInstance(MultiPartFilter.class.getName());	
+	DisneyLogger cat = new DisneyLogger(MultiPartFilter.class.getName());	
 		
 	protected FilterConfig filterConfig = null;
 
@@ -77,7 +74,7 @@ public class MultiPartFilter  implements Filter {
 	
 	
 
-	public static final String allowedContentType = "application";
+	//public static final String allowedContentType = "application";
 
 	private static PropertyReader reader = PropertyReader.getInstance();
 	
@@ -105,9 +102,10 @@ public class MultiPartFilter  implements Filter {
 		upload.setRepositoryPath( tempRepository );
 
 		req.setCharacterEncoding("UTF-8");
+		
+		
 		        
         boolean isMulti = DiskFileUpload.isMultipartContent(req);
-
 		//isMulti = true;
 
         if( isMulti ){
@@ -126,24 +124,17 @@ public class MultiPartFilter  implements Filter {
 			HashMap map = new HashMap();  
 			
 			while (iter.hasNext()) {
-				
 				item = (FileItem) iter.next();
-				
-
 				if (item.isFormField()) {
-					
 					processFormField(req,item,map);
-					
 				} else if(item.getSize()>0){
                     try{
 						processUploadedFile(req,item);
                     }catch(FileUploadException e){
                     	e.printStackTrace();
-                    	cat.error(e);
 						throw new ServletException(e);
                     }
 				}
-				
 			}
 
         }else{
@@ -158,12 +149,12 @@ public class MultiPartFilter  implements Filter {
         
 		String value = (item.getString());
 		
-		// UTF-8로 인코딩 필요함.
+		/*
 		try {
 			value = new String(value.getBytes("8859_1"),"utf-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-		}
+		}//*/
 
 		Object o = null;
 		
@@ -209,8 +200,12 @@ public class MultiPartFilter  implements Filter {
 				}
 
 				String jsonStr = buffer.toString();
+				
 				obj = parser.parse( jsonStr );
 				JSONObject jsonObj = (JSONObject) obj;
+				req.setAttribute("jsonString", jsonStr);
+				req.setAttribute("jsonObject", jsonObj);
+				
 				Set <String>set = jsonObj.keySet();
 				java.util.Iterator<String> iter = set.iterator();
 				String name = null;
@@ -218,8 +213,12 @@ public class MultiPartFilter  implements Filter {
 				
 				while(iter.hasNext()) {
 					name = iter.next();
-					value = (String) jsonObj.get(name);
-					req.setAttribute(name, value);
+					try {
+						value = (String) jsonObj.get(name);
+						req.setAttribute(name, value);
+					}catch(java.lang.ClassCastException e) {
+						e.printStackTrace();
+					}
 				}		
 			}catch(IOException e) {
 				e.printStackTrace();

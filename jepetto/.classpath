@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/tomcat/lib/tomcat-api.jar"/>
-	<classpathentry kind="lib" path="C:/tomcat/lib/mysql-connector-java-8.0.22.jar"/>
-	<classpathentry kind="lib" path="C:/Users/김창호/Downloads/jar_files/log4j-1.2.12.jar"/>
-	<classpathentry kind="lib" path="C:/Users/김창호/Downloads/jar_files/jdom-2.0.6.jar"/>
-	<classpathentry kind="lib" path="C:/tomcat/lib/servlet-api.jar"/>
-	<classpathentry kind="lib" path="C:/Users/김창호/Downloads/jar_files/commons-fileupload-1.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/김창호/Downloads/jar_files/mail-1.5.0-b01.jar"/>
-	<classpathentry kind="lib" path="C:/Users/김창호/Downloads/jar_files/javax.activation-1.2.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/김창호/Downloads/jar_files/poi-1.8.0-dev-20020919.jar"/>
-	<classpathentry kind="lib" path="C:/Users/김창호/Downloads/jar_files/poi-3.15.jar"/>
-	<classpathentry kind="lib" path="C:/Users/김창호/Downloads/jar_files/poi-ooxml-3.15.jar"/>
-	<classpathentry kind="lib" path="C:/Users/김창호/Downloads/jar_files/poi-ooxml-schemas-3.15.jar"/>
-	<classpathentry kind="lib" path="C:/Users/김창호/Downloads/jar_files/poi-scratchpad-3.15.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java11">
+	<classpathentry including="**/*.java" kind="src" output="target/classes" path="src">
 		<attributes>
-			<attribute name="module" value="true"/>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/tomcat/lib/json-20201115.jar"/>
-	<classpathentry kind="lib" path="C:/tomcat/lib/json-simple-1.1.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="lib" path="C:/tomcat/lib/tomcat-api.jar"/>
+	<classpathentry kind="lib" path="C:/tomcat/lib/servlet-api.jar"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/tomcat/lib/poi-1.8.0-dev-20020919.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

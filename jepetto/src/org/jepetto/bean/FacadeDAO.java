@@ -1,18 +1,19 @@
 package org.jepetto.bean;
 
 
-import java.util.HashMap;
+import java.util.Map;
 import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.naming.NamingException;
 
-import org.apache.log4j.Category;
+
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 
 import org.jepetto.logger.DisneyLogger;
+import org.jepetto.proxy.HomeProxy;
 import org.jepetto.sql.AbstractDAO;
 import org.jepetto.sql.Wrapper;
 import org.jepetto.sql.XmlTransfer;
@@ -21,7 +22,7 @@ import org.jepetto.sql.XmlTransfer;
 
 public class FacadeDAO {
 
-	Category cat = DisneyLogger.getInstance(FacadeDAO.class.getName());
+	DisneyLogger cat = new DisneyLogger(FacadeDAO.class.getName());
 	
 	/**
 	 * 
@@ -41,7 +42,7 @@ public class FacadeDAO {
 	 * @throws IOException 
 	 * @throws Exception
 	 */
-	public Document executeQuery(String dataSource, String file, String key, HashMap table,String arr[]) throws  SQLException, NamingException, JDOMException, IOException {
+	public Document executeQuery(String dataSource, String file, String key, Map table,String arr[]) throws  SQLException, NamingException, JDOMException, IOException {
 
 		
 		Wrapper wrapper = new Wrapper(dataSource);
@@ -73,7 +74,7 @@ public class FacadeDAO {
 	}
 
 	
-	public Document executeQuery(String dataSource, String file, String key, HashMap table,String arr[], int clobColumnIndex[]) throws  SQLException, NamingException, JDOMException, IOException {
+	public Document executeQuery(String dataSource, String file, String key, Map table,String arr[], int clobColumnIndex[]) throws  SQLException, NamingException, JDOMException, IOException {
 		
 		Wrapper wrapper = new Wrapper(dataSource);
 
@@ -263,7 +264,7 @@ public class FacadeDAO {
 	 * @throws JDOMException 
 	 * @throws IOException 
 	 */
-	public int executeUpdate(String docSource, String file, String key, HashMap table, String arr[]) throws  SQLException,  NamingException, JDOMException, IOException{
+	public int executeUpdate(String docSource, String file, String key, Map table, String arr[]) throws  SQLException,  NamingException, JDOMException, IOException{
 		
 		AbstractDAO dao = new AbstractDAO();
 		int count = 0;
@@ -307,7 +308,7 @@ public class FacadeDAO {
 	 * @throws JDOMException
 	 * @throws IOException
 	 */
-	public int executeUpdate(String docSource, String file, String key, HashMap table, String arr[][]) throws  SQLException,  NamingException, JDOMException, IOException{
+	public int executeUpdate(String docSource, String file, String key, Map table, String arr[][]) throws  SQLException,  NamingException, JDOMException, IOException{
 		
 		AbstractDAO dao = new AbstractDAO();
 		int count = 0;

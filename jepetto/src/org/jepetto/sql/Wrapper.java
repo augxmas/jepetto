@@ -19,12 +19,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-
 import javax.naming.NamingException;
-
-import org.apache.log4j.Category;
-
 import org.jepetto.logger.DisneyLogger;
+import org.jepetto.proxy.HomeProxy;
 
 
 
@@ -43,8 +40,7 @@ import org.jepetto.logger.DisneyLogger;
 public class Wrapper {
 
 	
-	Category cat = DisneyLogger.getInstance(Wrapper.class.getName());
-	
+	DisneyLogger cat = new DisneyLogger(Wrapper.class.getName());
 	/**
 	 * java.sql.Connection
 	 */	
@@ -519,8 +515,7 @@ out.println(w.getCString(2));  // ???琯?? out ?????? ?????? ?琯????? ????? ???
 	 * prepare statement ????, resultset ???
 	 */
     public void executeQuery()throws SQLException{
-   		cat.debug(pStmt.getQueryString());
-   		//System.out.println(pStmt.getQueryString());        
+   		cat.info(pStmt.getQueryString());
    		rset = pStmt.executeQuery();
     }
     
@@ -531,7 +526,6 @@ out.println(w.getCString(2));  // ???琯?? out ?????? ?????? ?琯????? ????? ???
     public int executeUpdate()throws SQLException{
     	int count = -1;
    		cat.info(pStmt.getQueryString());
-   		//System.out.println(pStmt.getQueryString());
    		count = pStmt.executeUpdate();   		
     	return count;
     }
@@ -554,7 +548,7 @@ out.println(w.getCString(2));  // ???琯?? out ?????? ?????? ?琯????? ????? ???
      */
     public void execute() throws SQLException{
     	cat.info(cStmt.getQueryString());   
-    	//System.out.println(cStmt.getQueryString());
+    	System.out.println(cStmt.getQueryString());
     	cStmt.execute();
     }
 

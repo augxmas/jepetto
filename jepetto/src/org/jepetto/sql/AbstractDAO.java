@@ -6,17 +6,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.naming.NamingException;
 
-import org.apache.log4j.Category;
 import org.jdom2.JDOMException;
-import org.jepetto.logger.DisneyLogger;
 import org.jepetto.util.MapComparator;
 
 
@@ -38,7 +38,7 @@ import org.jepetto.util.MapComparator;
  */
 public class AbstractDAO {
 	
-	Category cat = DisneyLogger.getInstance(AbstractDAO.class.getName());
+	
 
 	public AbstractDAO(){}
 
@@ -64,8 +64,8 @@ public class AbstractDAO {
 	public class QueryFarm {
 		
 		private String query;
-		private HashMap input;
-		//private HashMap<String, String> retMap = new HashMap<String, String>();
+		private Map input;
+		private Map<String, String> retMap = new HashMap<String, String>();
 		private String[] arr;
 		private String[] arr2;
 		
@@ -78,18 +78,18 @@ public class AbstractDAO {
 		}
 		
 		
-		public QueryFarm(String sql, HashMap map, String[] arr){
+		public QueryFarm(String sql, Map map, String[] arr){
 			//this.query = sql;
 			this.input = map;
 			this.arr = arr;
 
-			List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+			List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
 			int lastIndx = sql.indexOf("?");
 			
 			int arrIndx = 0;
 			while(lastIndx!=-1) {
-				HashMap<String, String> p = new HashMap<String, String>();
+				Map<String, String> p = new HashMap<String, String>();
 				p.put("POSITION", new Integer(lastIndx).toString());
 				p.put("VALUE", arr[arrIndx]);
 				
@@ -107,7 +107,7 @@ public class AbstractDAO {
 				
 				int indx = sql.indexOf("#{"+key+"}");
 				if(indx!=-1) {
-					HashMap<String, String> p = new HashMap<String, String>();
+					Map<String, String> p = new HashMap<String, String>();
 					p.put("POSITION", new Integer(indx).toString());
 					p.put("VALUE", value);
 					
@@ -115,7 +115,9 @@ public class AbstractDAO {
 				}
 			}
 			
-			MapComparator comp = new MapComparator("POSITION");
+			//MapComparator comp = new MapComparator("POSITION");
+			Comparator comp = new MapComparator("POSITION");
+			
 			Collections.sort(list, comp);
 			
 			arr2 = new String[list.size()];
@@ -141,7 +143,7 @@ public class AbstractDAO {
 		}
 		
 	}
-//	public 	ResultSet executeQuery(Wrapper wrapper, String file ,String key, HashMap table, String arr[]) throws   SQLException, NamingException, JDOMException, IOException{
+//	public 	ResultSet executeQuery(Wrapper wrapper, String file ,String key, Map table, String arr[]) throws   SQLException, NamingException, JDOMException, IOException{
 //		Date d1 = new Date();
 //		ResultSet rset = null;
 //		QueryReader matcher = new QueryReader(file,key);
@@ -159,11 +161,11 @@ public class AbstractDAO {
 //		
 //	}
 	
-	public 	ResultSet executeQuery(Wrapper wrapper, String file ,String key, HashMap table, String arr[]) throws   SQLException, NamingException, JDOMException, IOException{
+	public 	ResultSet executeQuery(Wrapper wrapper, String file ,String key, Map table, String arr[]) throws   SQLException, NamingException, JDOMException, IOException{
 		ResultSet rset = null;
 		QueryReader matcher = new QueryReader(file,key);
 		
-		HashMap<String, String> retable = new HashMap<String, String>();
+		Map<String, String> retable = new HashMap<String, String>();
 		
 		String query = matcher.getQuery(table, retable); // 쿼리 전체를 PreparedStatement로 변경 2016.06.30
 		
@@ -187,12 +189,12 @@ public class AbstractDAO {
 	}
 	
 
-	public 	ResultSet executeQuery(Wrapper wrapper, String file ,String key, HashMap table, String arr[], int clobColumnIndex[]) throws   SQLException, NamingException, JDOMException, IOException{
+	public 	ResultSet executeQuery(Wrapper wrapper, String file ,String key, Map table, String arr[], int clobColumnIndex[]) throws   SQLException, NamingException, JDOMException, IOException{
 		
 		ResultSet rset = null;
 		QueryReader matcher = new QueryReader(file,key);
 		
-		HashMap<String, String> retable = new HashMap<String, String>();
+		Map<String, String> retable = new HashMap<String, String>();
 		
 		String query = matcher.getQuery(table, retable); // 쿼리 전체를 PreparedStatement로 변경 2016.06.30
 		
@@ -333,12 +335,12 @@ public class AbstractDAO {
 	 * @throws IOException 
 	 * @throws JDOMException 
 	 */
-	public int executeUpdate(Wrapper wrapper , String file, String key, HashMap table, String arr[]) throws SQLException, NamingException, JDOMException, IOException{
+	public int executeUpdate(Wrapper wrapper , String file, String key, Map table, String arr[]) throws SQLException, NamingException, JDOMException, IOException{
 	    
 	    int updateCount = 0;	    
 		QueryReader matcher = new QueryReader(file,key);	
 		
-		HashMap<String, String> retable = new HashMap<String, String>();
+		Map<String, String> retable = new HashMap<String, String>();
 		
 		String query = matcher.getQuery(table, retable); // 쿼리 전체를 PreparedStatement로 변경 2016.06.30
 		
@@ -369,12 +371,12 @@ public class AbstractDAO {
 	 * @throws IOException 
 	 * @throws JDOMException 
 	 */
-	public int executeUpdateX(Wrapper wrapper , String file, String key, HashMap table, String arr[][]) throws SQLException, NamingException, JDOMException, IOException{
+	public int executeUpdateX(Wrapper wrapper , String file, String key, Map table, String arr[][]) throws SQLException, NamingException, JDOMException, IOException{
 	    
 	    int updateCount = 0;	    
 		QueryReader matcher = new QueryReader(file,key);	
 		
-		HashMap<String, String> retable = new HashMap<String, String>();
+		Map<String, String> retable = new HashMap<String, String>();
 		
 		String query = matcher.getQuery(table, retable); // 쿼리 전체를 PreparedStatement로 변경 2016.06.30
 		

@@ -1,5 +1,7 @@
 eclipse.preferences.version=1
+encoding//src/org/jepetto/filter/MultiPartFilter.java=UTF-8
 encoding//src/org/jepetto/proxy/HomeProxy.java=UTF-8
+encoding//src/org/jepetto/sql/QueryReader.java=UTF-8
 encoding//src/org/jepetto/sql/XmlResultSet.java=UTF-8
 encoding//src/org/jepetto/sql/XmlTransfer.java=UTF-8
 encoding//src/org/jepetto/xls/Xcel2Db.java=UTF-8

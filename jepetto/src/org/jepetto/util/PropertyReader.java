@@ -10,9 +10,6 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
-
-import org.apache.log4j.Category;
-
 import org.jepetto.logger.DisneyLogger;
 import org.jepetto.sql.Wrapper;
 
@@ -23,7 +20,7 @@ public class PropertyReader implements java.io.Serializable
 	private static PropertyReader reader = new PropertyReader();
 	private String path;
 	
-	Category cat = DisneyLogger.getInstance(PropertyReader.class.getName());	
+	DisneyLogger cat = new DisneyLogger(PropertyReader.class.getName());	
 	
 	private PropertyReader()
 	{
