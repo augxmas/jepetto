@@ -1,25 +1,25 @@
 package org.jepetto.xlsx;
 
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-
 import org.jepetto.adapter.data.PreparedStatementAdapter;
 
-public class PreparedStatement extends PreparedStatementAdapter{
+public class PreparedStatement4Bin extends PreparedStatementAdapter{
 	
 	private Workbook wb = null;
 	
 	private String query;
 
-	public PreparedStatement(String query) {
+	public PreparedStatement4Bin(String query) {
 		// TODO Auto-generated constructor stub
 		
 	}
 
-	public PreparedStatement(Workbook wb, String query) {
+	public PreparedStatement4Bin(Workbook wb, String query) {
 		// TODO Auto-generated constructor stub
 		this.wb = wb;
 		this.query = query;
@@ -59,7 +59,7 @@ public class PreparedStatement extends PreparedStatementAdapter{
 		try{
 			sheet = wb.getSheetAt(sheetIndex);
 			//rset = new ResultSet(sheet, columnIndexes);
-			rset = new ResultSet(sheet);
+			rset = new ResultSet4Bin(sheet);
 		}catch(Exception e){
 			throw new SQLException(e);
 		}

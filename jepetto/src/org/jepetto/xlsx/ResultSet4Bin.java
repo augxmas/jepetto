@@ -1,7 +1,11 @@
 package org.jepetto.xlsx;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -12,7 +16,7 @@ import org.jepetto.adapter.data.ResultSetAdapter;
  * @author mymac
  *
  */
-public class ResultSet extends ResultSetAdapter {
+public class ResultSet4Bin extends ResultSetAdapter {
 
 	/**
 	 * current row of cursor
@@ -28,7 +32,7 @@ public class ResultSet extends ResultSetAdapter {
 	 * result for sheet 
 	 * @param sheet sheet of excel
 	 */
-	public ResultSet(Sheet sheet) {
+	public ResultSet4Bin(Sheet sheet) {
 		rit = sheet.rowIterator();
 	}
 	
@@ -90,6 +94,57 @@ public class ResultSet extends ResultSetAdapter {
 			throw new SQLException(e);
 		}	
 		return value;
+	}
+
+	@Override
+	public int getInt(int index) throws SQLException {
+		index--;
+		Cell cell = null;
+		int value = -0;
+		try{
+			cell = row.getCell(index);			
+			value = (int)cell.getNumericCellValue();
+		}catch(Exception e){
+			throw new SQLException(e);
+		}	
+		return value;
+	}	
+
+	@Override
+	public boolean getBoolean(int index) throws SQLException {
+		index--;
+		Cell cell = null;
+		boolean value = false;
+		try{
+			cell = row.getCell(index);			
+			//value = (int)cell.getNumericCellValue();
+			value = cell.getBooleanCellValue();
+		}catch(Exception e){
+			throw new SQLException(e);
+		}	
+		return value;
+	}		
+	
+	public static void main(String args[]) {
+		Connection con;
+		try {
+			//con = DriverManager.getConnection("c://temp", "sample.xls");
+			//con = DriverManager.getConnection("c://temp", "sample.xlsx");
+			con = DriverManager.getConnection("c://temp", "sample.csv");
+			PreparedStatement pStmt = con.prepareStatement("select 1, 2, 3 from 0");
+			ResultSet rset = pStmt.executeQuery();
+			rset.next();
+			while(rset.next()) {
+				System.out.println(rset.getString(1));
+				System.out.println(rset.getInt(2));
+				System.out.println(rset.getBoolean(3));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 }

@@ -42,21 +42,17 @@ public class SecureAlgCtr {
     	//String key = "1234567890123456";
     	String key = PasswordGenerator.generatePasword(16);
     	
-    	key = "Y^#ReN!13v^k^tio";
+    	key = "X^#ReN!13v^k^tio"; 	 
     	
-    	String values[] = new String[]{"MA000040","1491968593191","5366480006201256","2603","216"}; // merchantid, merchanttransid, cardnumber, expiry, cvc
-    	// mine card
-    	values = new String[]{"MA000039","03840204802","1234123412341234","2307","240","honggildong"}; // merchantid, merchanttransid, cardnumber, expiry, cvc
-    	
-    	//values = new String[] {"1491968593191","abc","2103","123","youraccountid"};
+    	String values[] = new String[]{"MA000041","62ac46eaa5a35","5391321011273998","2411","867", "KIM CHANGHO"}; 
+    	// // merchantid, merchanttransid, cardnumber, expiry, cvc, holdername
     	
     	String encripted = null;
     	try {
     		System.out.println("Key : " + key);
     		for(int i = 0 ; i < values.length ; i++) {
-				//encripted = String.valueOf(SecureAlgCtr.encrypt(values[i], key).hashCode());
     			encripted = SecureAlgCtr.encrypt(values[i], key);
-				System.out.println(SecureAlgCtr.decrypt(encripted, key) + " : " + encripted + " : "+  " enc length : " + encripted.length());
+				System.out.println(SecureAlgCtr.decrypt(encripted, key) + " : " + encripted);// + " : "+  " enc length : " + encripted.length());
     		}
 		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException
@@ -64,6 +60,10 @@ public class SecureAlgCtr {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    	
+    	System.out.println("62ac46eaa5a35".hashCode());
+    	
+    	System.out.println(Math.abs("62ac46eaa5a3562ac46eaa5a3562ac46eaa5a3562ac46eaa5a3562ac46eaa5a3562ac46eaa5a35".hashCode()));
     	
     }
 }

@@ -1,9 +1,12 @@
 package org.jepetto.logger;
 
-//import org.apache.log4j.Category;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.io.File;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
+
 
 public class DisneyLogger  {
 
@@ -12,8 +15,10 @@ public class DisneyLogger  {
 	private Logger logger = null;
 	
 	public DisneyLogger(String cls){
+		//PropertyConfigurator.configure(System.getProperty("user.dir") + File.separator + "log4j.properties");
+		PropertyConfigurator.configure("c:\\tomcat\\conf\\log4j.conf.xml");
 		this.className = cls;
-		this.logger = LogManager.getLogger(cls);
+		logger = LogManager.getLogger(cls);
 	}
 	//*/
 	

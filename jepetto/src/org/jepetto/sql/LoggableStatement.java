@@ -45,7 +45,7 @@ public class LoggableStatement implements PreparedStatement {
 		* Whenever a call is made to this <code>LoggableStatement</code> it is forwarded to the prepared statment created from
 		* <code>connection</code> after first saving relevant parameters for use in logging output.
 		*
-		* @param Connection java.sql.Connection a JDBC-connection to be used for obtaining a "real statement"
+		* @param Connection4Bin java.sql.Connection a JDBC-connection to be used for obtaining a "real statement"
 		* @param sql java.lang.String thw sql to exectute
 		* @exception java.sql.SQLException if a <code>PreparedStatement</code> cannot be created
 		* using the supplied <code>connection</code> and <code>sql</code>

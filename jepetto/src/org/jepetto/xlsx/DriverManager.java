@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -14,6 +15,9 @@ import java.sql.SQLException;
  */
 public class DriverManager {
 
+	private static final String csvSuffix	= "csv";
+	private static final String xlsSuffix	= "xls";
+	private static final String xlsxSuffix	= "xlsx";
 	
 	/**
 	 * 
@@ -33,16 +37,24 @@ public class DriverManager {
 		File file = new File(path, fileName);
 		
 		try {
-			
 			in = new FileInputStream(file);
-			con = new Connection(in);
-			System.out.println(path);
+			
+			if( fileName.endsWith(xlsSuffix) || fileName.endsWith(xlsxSuffix)) {
+				con = new Connection4Bin(in);
+			}else if(fileName.endsWith(csvSuffix)){
+				con = new Connection4CSV(in);
+			}else {
+				throw new SQLException("Not supported File. only csv, xls, xlsx supported");
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			throw new SQLException(e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw new SQLException(e.getMessage());
 		}catch(Exception e){
 			e.printStackTrace();
+			throw new SQLException(e.getMessage());
 		}
 		finally{
 			

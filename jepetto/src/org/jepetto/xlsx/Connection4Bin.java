@@ -16,7 +16,7 @@ import org.jepetto.adapter.data.ConnectionAdapter;
  * @author mymac
  *
  */
-public class Connection extends ConnectionAdapter {
+public class Connection4Bin extends ConnectionAdapter {
 
 	/**
 	 * excel file inputstream
@@ -36,12 +36,11 @@ public class Connection extends ConnectionAdapter {
 	 * @throws SQLException InvalidFormatException, IOException wrapped to SQLExctpion. 
 	 *  Exception occur when can't read excel file
 	 */
-	public Connection(InputStream in) throws SQLException {
+	public Connection4Bin(InputStream in) throws SQLException {
 		this.in = in;
 		try {
 			wb = WorkbookFactory.create(in);
-		//} catch (InvalidFormatException e) {
-			//throw new SQLException(e);
+
 		} catch (IOException e) {
 			throw new SQLException(e);
 		}catch(Exception e){
@@ -68,8 +67,8 @@ public class Connection extends ConnectionAdapter {
 	 * @return pstmt session object for reading excel file with specific query
 	 * @throws SQLException InvalidFormatException, IOException wrapped to SQLExctpion. 	 * 
 	 */
-	public PreparedStatement prepareStatement(String query) throws SQLException {
-		return new PreparedStatement(wb,query);
+	public PreparedStatement4Bin prepareStatement(String query) throws SQLException {
+		return new PreparedStatement4Bin(wb,query);
 	}
 	
 }
