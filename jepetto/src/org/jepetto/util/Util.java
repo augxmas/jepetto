@@ -1,6 +1,6 @@
 package org.jepetto.util;
 
-
+import java.util.Base64;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.File;
@@ -13,12 +13,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+//import java.net.HttpURLConnection;
+//import java.net.URL;
 import java.util.Calendar;
 import java.util.Vector;
 import javax.servlet.http.HttpServletResponse;
 //
+
+import org.apache.commons.io.FileUtils;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfWriter;
 
 
 //import com.certicom.net.ssl.internal.HttpURLConnection;
@@ -737,6 +742,50 @@ public class Util {
 		return result.toString(); 
 	}
   	
+  	
+  	public static String fileToBase64(String path, String file) throws IOException {
+		byte[] fileContent = FileUtils.readFileToByteArray(new File(path,file));
+		String encodedString = Base64.getEncoder().encodeToString(fileContent);
+		return encodedString;
+	}
+	
+	
+	public static boolean base64ToFile(String path, String fileName, String encodedStr) throws IOException, DocumentException {
+		Document document = new Document();
+		OutputStream output = null;
+		boolean isFail = false;
+		try {
+			output = new FileOutputStream(new File(path, fileName));
+			PdfWriter.getInstance(document, output);
+			byte []bytes = Base64.getDecoder().decode(encodedStr);
+		    output.write(bytes);
+		    isFail = true;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}catch (DocumentException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}finally {
+			try {
+				output.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	    
+	    return isFail;
+		
+		
+	}
+	
+ 	
   	
 	public static void main(String args[]){
 		

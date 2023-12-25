@@ -527,7 +527,7 @@ out.println(w.getCString(2));  // ???琯?? out ?????? ?????? ?琯????? ????? ???
     public int executeUpdate()throws SQLException{
     	int count = -1;
    		cat.info(pStmt.getQueryString());
-   		System.out.println(pStmt.getQueryString());
+   		//System.out.println(pStmt.getQueryString());
    		count = pStmt.executeUpdate();   		
     	return count;
     }

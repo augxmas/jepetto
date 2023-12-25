@@ -17,6 +17,7 @@ import org.jdom2.input.DOMBuilder;
 import org.jepetto.logger.DisneyLogger;
 import org.jepetto.proxy.HomeProxy;
 import org.jepetto.util.Util;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.xml.sax.SAXException;
 
@@ -27,6 +28,7 @@ public class XmlTransfer {
 	
 	public JSONObject trasnferDom2JSon(Document doc) throws SQLException{
 		JSONObject json = new JSONObject();
+		
 		Connection con = new XmlConnection(doc);
 		PreparedStatement stmt = con.prepareStatement("//recordset/row");
 		ResultSet rset = stmt.executeQuery();
@@ -63,6 +65,34 @@ public class XmlTransfer {
 		return json;
 		
 	}//*/
+	
+	public JSONArray trasnferRset2JSon(ResultSet rset) throws SQLException{
+  		JSONArray arr = new JSONArray();
+  		JSONObject json = null;
+  		try{
+	  		java.sql.ResultSetMetaData meta = rset.getMetaData();
+	  		int count = meta.getColumnCount();
+	  		String key = null;
+	  		String value = null;
+	  		while(rset.next()) {
+	  			json = new JSONObject();
+	  			for(int i = 0 ; i < count ; i++) {
+	  				key = meta.getColumnLabel(i+1);
+	  				value = rset.getObject(i+1).toString();
+	  				json.put(key, value);
+	  			}
+	  			arr.add(json);
+	  		}
+
+
+  		}catch(SQLException e){
+  			e.printStackTrace();
+  		}finally{
+  			rset.close();
+  		}
+  		return arr;
+		
+	}
 	
 	public Document trasnferRset2Dom(ResultSet rset) throws SQLException{
 

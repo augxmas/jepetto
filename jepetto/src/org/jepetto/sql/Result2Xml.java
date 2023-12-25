@@ -1,10 +1,12 @@
 package org.jepetto.sql;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.io.OutputStream;
-import java.io.IOException;
 import java.sql.SQLException;
+
+import org.json.simple.JSONObject;
 
 /**
  * 

@@ -17,6 +17,7 @@ import org.jepetto.proxy.HomeProxy;
 import org.jepetto.sql.AbstractDAO;
 import org.jepetto.sql.Wrapper;
 import org.jepetto.sql.XmlTransfer;
+import org.json.simple.JSONArray;
 
 
 
@@ -24,24 +25,6 @@ public class FacadeDAO {
 
 	DisneyLogger cat = new DisneyLogger(FacadeDAO.class.getName());
 	
-	/**
-	 * 
-	 * ??? ??? Single LData?? ?????? ????
-	 * ??? ?? ???? 0 ??? 1 ????? ??????
-	 * 
-	 * @param dataSource laf.xml???? ?????? datasource
-	 * @param file query xml ????
-	 * @param key ????? qurey id
-	 * @param table	????
-	 * @param arr ???ε? ????
-	 * @return
-	 * @throws LQueryException
-	 * @throws SQLException
-	 * @throws NamingException
-	 * @throws JDOMException 
-	 * @throws IOException 
-	 * @throws Exception
-	 */
 	public Document executeQuery(String dataSource, String file, String key, Map table,String arr[]) throws  SQLException, NamingException, JDOMException, IOException {
 
 		
@@ -103,24 +86,73 @@ public class FacadeDAO {
 		return doc;
 		
 	}
+
+	public JSONArray executeQueryJ(String dataSource, String file, String key, Map table,String arr[]) throws  SQLException, NamingException, JDOMException, IOException {
+
+		
+		Wrapper wrapper = new Wrapper(dataSource);
+
+		AbstractDAO dao = new AbstractDAO(); 
+		XmlTransfer transfer = new XmlTransfer(); 
+		ResultSet rset = null;
+		//Document doc = null;
+		JSONArray jArr = null;
+		try {
+			rset = dao.executeQuery(wrapper,file,key,table,arr);
+			//doc = transfer.trasnferRset2Dom(rset);
+			jArr = transfer.trasnferRset2JSon(rset);
+		} catch (SQLException e) {
+			throw  e;
+		} catch (NamingException e) {
+			throw e;
+		} catch (JDOMException e) {
+			throw e;
+
+		} catch (IOException e) {
+			throw e;
+
+		}
+		finally{
+			dao.close(wrapper);
+		}
+
+		return jArr;
+		
+	}
+
 	
-	/**
-	 * 
-	 * ?? ??(single row)?? create, update, delete?? o????? ????
-	 * 
-	 * @param docSource laf.xml???? ?????? docsource
-	 * @param file query xml ????
-	 * @param key ????? query id 
-	 * @param arr ???ε? ????
-	 * @return
-	 * @throws LSysException
-	 * @throws SQLException
-	 * @throws SQLException
-	 * @throws LQueryException
-	 * @throws NamingException
-	 * @throws JDOMException 
-	 * @throws IOException 
-	 */
+	public JSONArray executeQueryJ(String dataSource, String file, String key, Map table,String arr[], int clobColumnIndex[]) throws  SQLException, NamingException, JDOMException, IOException {
+		
+		Wrapper wrapper = new Wrapper(dataSource);
+
+		AbstractDAO dao = new AbstractDAO(); 
+		XmlTransfer transfer = new XmlTransfer(); 
+		ResultSet rset = null;
+		JSONArray jArr = null;
+		try {
+			rset = dao.executeQuery(wrapper,file,key,table,arr);
+			jArr = transfer.trasnferRset2JSon(rset);
+		} catch (SQLException e) {
+			throw  e;
+		} catch (NamingException e) {
+			throw e;
+		} catch (JDOMException e) {
+			throw e;
+
+		} catch (IOException e) {
+			throw e;
+
+		}
+		finally{
+			dao.close(wrapper);
+		}
+
+		return jArr;
+		
+	}
+
+	
+	
 	public int executeUpdate(String docSource, String file, String key, String arr[]) throws  SQLException,  NamingException, JDOMException, IOException{
 		
 		AbstractDAO dao = new AbstractDAO();
@@ -150,24 +182,7 @@ public class FacadeDAO {
 	
 		return count;
 	}
-
-
-	/**
-	 * 
-	 * ???? query?? ?? ????(multi row)?? ??????? ???? create, update, delete?? o????? ????
-	 * 
-	 * @param docSource laf.xml???? ?????? docsource
-	 * @param file query xml ????
-	 * @param key ????? query id 
-	 * @param arr ???ε? ????
-	 * @return
-	 * @throws LSysException
-	 * @throws LQueryException
-	 * @throws SQLException
-	 * @throws NamingException
-	 * @throws JDOMException 
-	 * @throws IOException 
-	 */
+	
 	public int executeUpdate(String docSource, String file, String key, String arr[][]) throws   SQLException, NamingException, JDOMException, IOException{
 		
 		AbstractDAO dao = new AbstractDAO();
@@ -199,23 +214,6 @@ public class FacadeDAO {
 	}
 	
 	
-	/**
-	 * 
-	 * ????????(multi row) o????μ? ???, ??? ?? ???? ????? query ????, key, ???ε? ???????? ?????? ??
-	 * ??????
-	 * 
-	 * @param docSource laf.xml???? ?????? docsource
-	 * @param files query xml ?????
-	 * @param keys ????? query id
-	 * @param arr ???ε? ????
-	 * @return
-	 * @throws LSysException
-	 * @throws LQueryException
-	 * @throws SQLException
-	 * @throws NamingException
-	 * @throws JDOMException 
-	 * @throws IOException 
-	 */
 	public int executeUpdateX(String docSource, String files[], String keys[], String arr[][]) throws SQLException, NamingException, JDOMException, IOException{
 	    int updateCount = 0;
 		AbstractDAO dao = new AbstractDAO();
@@ -246,24 +244,6 @@ public class FacadeDAO {
 	    return updateCount;
 	}
 	
-	
-
-	/**
-	 * 
-	 * ?? ??(single row)?? create, update, delete?? o????? ????
-	 * 
-	 * @param docSource laf.xml???? ?????? docsource
-	 * @param file query ????
-	 * @param key ????? query id
-	 * @param table ????
-	 * @param arr ???ε?
-	 * @return
-	 * @throws SQLException
-	 * @throws LQueryException
-	 * @throws NamingException
-	 * @throws JDOMException 
-	 * @throws IOException 
-	 */
 	public int executeUpdate(String docSource, String file, String key, Map table, String arr[]) throws  SQLException,  NamingException, JDOMException, IOException{
 		
 		AbstractDAO dao = new AbstractDAO();
@@ -294,20 +274,6 @@ public class FacadeDAO {
 		return count;
 	}
 
-	
-	/**
-	 * multi row
-	 * @param docSource
-	 * @param file
-	 * @param key
-	 * @param table
-	 * @param arr
-	 * @return
-	 * @throws SQLException
-	 * @throws NamingException
-	 * @throws JDOMException
-	 * @throws IOException
-	 */
 	public int executeUpdate(String docSource, String file, String key, Map table, String arr[][]) throws  SQLException,  NamingException, JDOMException, IOException{
 		
 		AbstractDAO dao = new AbstractDAO();
@@ -442,4 +408,7 @@ public class FacadeDAO {
 	
 		return count;
 	}
+
+
+
 }

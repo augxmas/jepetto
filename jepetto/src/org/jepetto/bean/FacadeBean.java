@@ -1,42 +1,18 @@
 package org.jepetto.bean;
 
-
 import java.io.File;
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Map;
-
 import javax.naming.NamingException;
-
-
-
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
-
-
 import org.jepetto.logger.DisneyLogger;
-import org.jepetto.proxy.HomeProxy;
+import org.json.simple.JSONArray;
+import org.omg.CORBA.SystemException;
 
 
-/**
- * XDoclet-based session bean.  The class must be declared
- * public according to the EJB specification.
- *
- * To generate the EJB related files to this EJB:
- *		- Add Standard EJB module to XDoclet project properties
- *		- Customize XDoclet configuration for your appserver
- *		- Run XDoclet
- *
- * Below are the xdoclet-related tags needed for this EJB.
- * 
- * @ejb.bean name="Facade"
- *           display-name="Name for Facade"
- *           description="Description for Facade"
- *           jndi-name="ejb/Facade"
- *           type="Stateless"
- *           view-type="remote"
- */
+
 public class FacadeBean implements Facade{//extends SessionAdapter{
 
 	DisneyLogger cat = new DisneyLogger(FacadeBean.class.getName());
@@ -120,6 +96,54 @@ public class FacadeBean implements Facade{//extends SessionAdapter{
 		return doc;
 	}//*/
 
+	
+	public JSONArray executeQueryJ(String datasource, String file, String key, Map table, String arr[]) throws SQLException, NamingException, JDOMException, IOException{
+        
+		FacadeDAO dao = new FacadeDAO();
+		JSONArray jArr = null;
+		
+		try {
+			jArr= dao.executeQueryJ(datasource,file,key,table,arr);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			throw e;
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			throw e;
+		} catch (JDOMException e) {
+			// TODO Auto-generated catch block
+			throw e;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			throw e;
+		}
+		
+		return jArr;
+	}//*/
+	
+	public JSONArray executeQueryJ(String datasource, String file, String key, Map table, String arr[], int clobColumnIndex[]) throws SQLException, NamingException, JDOMException, IOException{
+        
+		FacadeDAO dao = new FacadeDAO();
+		JSONArray jArr = null;
+		
+		try {
+			jArr = dao.executeQueryJ(datasource,file,key,table,arr,clobColumnIndex);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			throw e;
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			throw e;
+		} catch (JDOMException e) {
+			// TODO Auto-generated catch block
+			throw e;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			throw e;
+		}
+		
+		return jArr;
+	}//*/
 	
 	
 	/**

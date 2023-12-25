@@ -15,47 +15,10 @@ import org.jdom2.Element;
 import org.jdom2.Attribute;
 
 
-/**
- * 
- * <pre>
- * 
- * xpath占쎈퓠 野껓옙占쎄퉳占쎈쭆 野껉퀗�궢�몴占� 筌〓챷�쒙옙釉� 占쎈땾 占쎌뿳占쎈뮉 疫꿸퀡�뮟占쎌뱽 占쎌젫�⑤벏釉�占쎈뮉 占쎄깻占쎌삋占쎈뮞
- * 	
- * 		Document doc
- * 		Connection con = new XmlConnection(doc);
- * 		PreparedStatement stmt = con.prepareStatement("//recordset/row");
- * 
- * 		// PreparedStatement stmt = new XmlStatement("c:/vitac.xml","//recordset/row");
- * 		// PreparedStatement stmt = new XmlStatement("c:/vitac.xml","//recordset/row/query");
- * 		// XmlStatement stmt = new XmlStatement("c:/vitac.xml","//recordset/row/OF_HAN1");
- * 
- * 		ResultSet rset = stmt.executeQuery();
- * 		int index = 0;
- * 
- * 		while( rset.next() ){
- * 			System.out.println( rset.getString("column0") );		// column name referencing
- * 			System.out.println( rset.getString(++index) );			// column index referencing
- * 			System.out.println( rset.getString(++index) );
- * 			System.out.println( rset.getString(++index) );
- * 			index = 0;
- * 		}
- *  
- * @date 2004. 8. 18.
- * @version
- * @since
- * @author 繹먲옙筌≪��깈
- * copyright UMLKOREA Co,Ltd
- * 
- * </pre>
- */
 
 public class XmlResultSet implements ResultSet,Serializable{
     
-	/**
-	 * xpath占쎈퓠 占쎌벥占쎈퉸 野껓옙占쎄퉳占쎈쭆 野껉퀗�궢(list)�몴占� 占쎌뵠占쎌뒠占쎈퉸占쎄퐣 instance�몴占� 占쎄문占쎄쉐
-	 * @param list xpath 野껉퀗�궢 筌욌쵑鍮�
-	 * @throws SQLException
-	 */
+
 	public XmlResultSet(List list) throws SQLException{
 		try{
 			this.list = list;
@@ -91,12 +54,7 @@ public class XmlResultSet implements ResultSet,Serializable{
 			table = new HashMap();
 			table.put("count",d.intValue());
 		}
-		/*
-		 * 占쎈뻻揶쏄쑬由븝쭖占� Attribute 筌ｌ꼶�봺占쎈릭野껓옙 筌띾슢諭�
-		 * catch(java.lang.ClassCastException e){
-			Attribute arr = (Attribute)list.get(cursor);
-			System.out.println("value : "+ arr.getValue());
-		}*/
+
 		return flag;
 	}
 	
@@ -110,13 +68,10 @@ public class XmlResultSet implements ResultSet,Serializable{
 		}catch(Exception e){
 			value = this.ele.getTextTrim();
 		}
-		
-		//return replace(value);
 		return (value);
 	}
 	
 	public String getString(String columnName) throws SQLException{
-		//return replace((String)table.get(columnName));
 		return (String)table.get(columnName);
 	}
 	
@@ -134,15 +89,7 @@ public class XmlResultSet implements ResultSet,Serializable{
 	}
 	
 	public boolean getBoolean(String columnName) throws SQLException{
-		/*
-		Element ele = null;
-		boolean value = false;
-		try{
-			ele = (Element)table.get(columnName);
-			value = Boolean.getBoolean(ele.getTextTrim());
-		}catch(Exception e){
-			value = Boolean.getBoolean(this.ele.getTextTrim());
-		}//*/
+
 		String value = (String)table.get(columnName);
 		return Boolean.getBoolean(value);
 	}
@@ -162,15 +109,7 @@ public class XmlResultSet implements ResultSet,Serializable{
 	}
 	
 	public byte getByte(String columnName) throws SQLException{
-		/*
-		Element ele = null;
-		byte value = 0;
-		try{
-			ele = (Element)table.get(columnName);
-			value = Byte.parseByte(ele.getTextTrim());
-		}catch(Exception e){
-			value = Byte.parseByte(this.ele.getTextTrim());
-		}//*/
+
 		String value = (String)table.get(columnName);
 		return Byte.parseByte(value);
 	}	
@@ -189,16 +128,7 @@ public class XmlResultSet implements ResultSet,Serializable{
 	}
 	
 	public short getShort(String columnName) throws SQLException{
-		/*
-		Element ele = null;
-		short value = 0;
-		try{
-			ele = (Element)table.get(columnName);
-			value = Short.parseShort(ele.getTextTrim());
-		}catch(Exception e){
-			value = Short.parseShort(this.ele.getTextTrim());
-		}
-		return value;//*/
+
 		String value = (String)table.get(columnName);
 		return Short.parseShort(value);
 		
@@ -218,16 +148,7 @@ public class XmlResultSet implements ResultSet,Serializable{
 	}
 	
 	public int getInt(String columnName) throws SQLException{
-		/*
-		Element ele = null;
-		int value = 0;
-		try{
-			ele = (Element)table.get(columnName);
-			value = Integer.parseInt(ele.getTextTrim());
-		}catch(Exception e){
-			value = Integer.parseInt(this.ele.getTextTrim());
-		}
-		return value;//*/
+
 		String value = (String)table.get(columnName);
 		return Integer.parseInt(value);
 
@@ -249,16 +170,7 @@ public class XmlResultSet implements ResultSet,Serializable{
 	}
 	
 	public long getLong(String columnName) throws SQLException{
-		/*
-		Element ele = null;
-		long value = 0;
-		try{
-			ele = (Element)table.get(columnName);
-			value = Long.parseLong(ele.getTextTrim());
-		}catch(Exception e){
-			value = Long.parseLong(this.ele.getTextTrim());
-		}
-		return value;//*/
+
 		String value = (String)table.get(columnName);
 		return Long.parseLong(value);
 		
@@ -278,16 +190,7 @@ public class XmlResultSet implements ResultSet,Serializable{
 	}
 
 	public float getFloat(String columnName) throws SQLException{
-		/*
-		Element ele = null;
-		float value = 0;
-		try{
-			ele = (Element)table.get(columnName);
-			value = Float.parseFloat(ele.getTextTrim());
-		}catch(Exception e){
-			value = Float.parseFloat(this.ele.getTextTrim());
-		}
-		return value;//*/
+
 		String value = (String)table.get(columnName);
 		return Float.parseFloat(value);
 		
@@ -307,16 +210,7 @@ public class XmlResultSet implements ResultSet,Serializable{
 	}
 	
 	public double getDouble(String columnName) throws SQLException{
-		/*
-		Element ele = null;
-		double value = 0;
-		try{
-			ele = (Element)table.get(columnName);
-			value = Double.parseDouble(ele.getTextTrim());
-		}catch(Exception e){
-			value = Double.parseDouble(this.ele.getTextTrim());
-		}
-		return value;//*/
+
 		String value = (String)table.get(columnName);
 		return Double.parseDouble(value);
 		
@@ -332,7 +226,6 @@ public class XmlResultSet implements ResultSet,Serializable{
 		Element ele = null;
 		try{
 			ele = (Element)rows.get(columnIndex);
-			// format yyyy-mm-dd
 			value = java.sql.Date.valueOf(ele.getTextTrim());
 		}catch(Exception e){
 			value = java.sql.Date.valueOf(ele.getTextTrim());
@@ -352,19 +245,7 @@ public class XmlResultSet implements ResultSet,Serializable{
 	public ResultSetMetaData getMetaData() throws SQLException{
 		return new XmlResultSetMetaData(list);
 	}
-	
-	/*
-	private String replace(String s){
-		String amp = "&amp;";
-		String gt = "&gt;";
-		String lt = "&lt;";
-		if( s != null){
-			s = s.replaceAll("&", amp);
-			s = s.replaceAll("<", lt);
-			s = s.replaceAll(">", gt);
-		}
-		return s;
-	}*/
+
 	
 	
 	public int getRow() throws SQLException{return cursor;}	

@@ -21,42 +21,9 @@ import org.jepetto.util.MapComparator;
 
 
 
-/**
- * 
- * @(#) AbstractDAO.java 
- *
- * <pre> 
- *  executeUpdate ?? executeQuery?? ???? abstract layer?μ?
- *  ????????? ???? JDBC, JNDI?? ??????? ???? ???? ?? ????????? ??????? ???? ??????
- *  insert,update,delete,select?? o???? ?? ???
- * 
- * </pre>
- * @author ??a?
- * @version 1.0 2006.02.10
- * @ see FacadeDAO.java 
- *
- */
 public class AbstractDAO {
-	
-	
 
 	public AbstractDAO(){}
-
-	/**
-	 * ??? ??? ??? 
-	 * @param wrapper jdbc wrapping instance
-	 * @param file query xml file
-	 * @param key ????? query id
-	 * @param table ????
-	 * @param arr ???ε? ????
-	 * @return
-	 * @throws LQueryException
-	 * @throws SQLException
-	 * @throws NamingException
-	 * @throws IOException 
-	 * @throws JDOMException 
-	 */
-	
 	
 	// 수정 : 김방영 2016.06.30
 	// xmlquery에서 가져온 element mapping query를 preparedstatement로 사용하기 위한 query문 , String[] 수정 작업
@@ -143,23 +110,7 @@ public class AbstractDAO {
 		}
 		
 	}
-//	public 	ResultSet executeQuery(Wrapper wrapper, String file ,String key, Map table, String arr[]) throws   SQLException, NamingException, JDOMException, IOException{
-//		Date d1 = new Date();
-//		ResultSet rset = null;
-//		QueryReader matcher = new QueryReader(file,key);
-//		String query = matcher.getQuery(table);
-//		
-//		wrapper.setPreparedStatement( query );
-//		for( int i = 0 ; arr != null && i < arr.length ; i++){
-//			wrapper.setObject(i+1,arr[i]);	
-//		}				
-//		wrapper.executeQuery();
-//		rset = wrapper.getResultSet();		
-//		Date d2 = new Date();
-//		System.out.println("executeQuery    "+ (d2.getTime()-d1.getTime()));
-//		return rset;
-//		
-//	}
+
 	
 	public 	ResultSet executeQuery(Wrapper wrapper, String file ,String key, Map table, String arr[]) throws   SQLException, NamingException, JDOMException, IOException{
 		ResultSet rset = null;
@@ -212,22 +163,61 @@ public class AbstractDAO {
 		return rset;
 		
 	}
+	
+	/*
+	public 	ResultSet executeQueryJ(Wrapper wrapper, String file ,String key, Map table, String arr[]) throws   SQLException, NamingException, JDOMException, IOException{
+		ResultSet rset = null;
+		QueryReader matcher = new QueryReader(file,key);
+		
+		Map<String, String> retable = new HashMap<String, String>();
+		
+		String query = matcher.getQuery(table, retable); // 쿼리 전체를 PreparedStatement로 변경 2016.06.30
+		
+		QueryFarm qfarm = new QueryFarm(query, retable, arr);
+		
+		//save_sql(key, matcher.getQuery(), matcher.getQuery(table), query, qfarm.getQuery());
+		
+		query = qfarm.getQuery();
+		arr = qfarm.getParams();
+		
 
+			
+		wrapper.setPreparedStatement( query );
+		for( int i = 0 ; arr != null && i < arr.length ; i++){
+			wrapper.setObject(i+1,arr[i]);	
+		}				
+		wrapper.executeQuery();
+		rset = wrapper.getResultSet();		
+		return rset;
+			
+	}
 	
-	
-	/**
-	 * ?? ???? insert, update, delete?? o?????
-	 * @param wrapper jdbc wrapper instance
-	 * @param file query xml ????
-	 * @param key ????? query id
-	 * @param arr ???ε? ????
-	 * @return o?????
-	 * @throws LQueryException
-	 * @throws SQLException
-	 * @throws NamingException
-	 * @throws IOException 
-	 * @throws JDOMException 
-	 */
+
+	public 	ResultSet executeQueryJ(Wrapper wrapper, String file ,String key, Map table, String arr[], int clobColumnIndex[]) throws   SQLException, NamingException, JDOMException, IOException{
+		
+		ResultSet rset = null;
+		QueryReader matcher = new QueryReader(file,key);
+		
+		Map<String, String> retable = new HashMap<String, String>();
+		
+		String query = matcher.getQuery(table, retable); // 쿼리 전체를 PreparedStatement로 변경 2016.06.30
+		
+		QueryFarm qfarm = new QueryFarm(query, retable, arr);
+		
+		query = qfarm.getQuery();
+		arr = qfarm.getParams();
+		
+		wrapper.setPreparedStatement( query );
+		for( int i = 0 ; arr != null && i < arr.length ; i++){
+			wrapper.setObject(i+1,arr[i]);	
+		}				
+		wrapper.executeQuery();
+		rset = wrapper.getResultSet();			
+		return rset;
+		
+	}
+	//*/
+
 	public int executeUpdate( Wrapper wrapper, String file, String key, String arr[] ) throws  SQLException, NamingException, JDOMException, IOException{
 		
 		int updateCount = -1;	
@@ -274,20 +264,6 @@ public class AbstractDAO {
 		return i;
 	}
 	
-	
-	/**
-	 * multi row?? insert ,update, delete?? o?????
-	 * @param wrapper jdbc wrapper instance
-	 * @param file query xml ????
-	 * @param key query id
-	 * @param arr ???ε? ????
-	 * @return o??????
-	 * @throws LQueryException
-	 * @throws SQLException
-	 * @throws NamingException
-	 * @throws IOException 
-	 * @throws JDOMException 
-	 */
 	public int executeUpdateX( Wrapper wrapper, String file, String key, String arr[][] ) throws  SQLException, NamingException, JDOMException, IOException {
 		
 		int updateCount = 0;		
@@ -307,34 +283,9 @@ public class AbstractDAO {
 		
 		for(int r:res) 	updateCount += r;
 		
-/*		for( int i = 0 ; arr != null && i < arr.length ; i++){
-			for( int j = 0 ; j < arr[i].length ; j++){
-				wrapper.setObject(j+1, arr[i][j]);
-			}
-			updateCount += wrapper.executeUpdate();
-		}	*/		
 		return updateCount;
 	}
 	
-	
-	
-	/**
-	 * 
-	 * ????? insert or delete or update?? ?? ??? ??????
-	 * ?? ???? ?????? ??? ??????
-	 * 
-	 * @param wrapper	jdbc wrapping instance
-	 * @param file		query xml ????
-	 * @param key		????? query id 	
-	 * @param table		????
-	 * @param arr		???ε? ????
-	 * @return
-	 * @throws LQueryException
-	 * @throws SQLException
-	 * @throws NamingException
-	 * @throws IOException 
-	 * @throws JDOMException 
-	 */
 	public int executeUpdate(Wrapper wrapper , String file, String key, Map table, String arr[]) throws SQLException, NamingException, JDOMException, IOException{
 	    
 	    int updateCount = 0;	    
@@ -357,20 +308,6 @@ public class AbstractDAO {
 	    return updateCount;
 	}
 
-	/**
-	 * 
-	 * @param wrapper	jdbc wrapping instance
-	 * @param file		query xml ????
-	 * @param key		????? query id
-	 * @param table		????
-	 * @param arr		???ε? ????
-	 * @return
-	 * @throws LQueryException
-	 * @throws SQLException
-	 * @throws NamingException
-	 * @throws IOException 
-	 * @throws JDOMException 
-	 */
 	public int executeUpdateX(Wrapper wrapper , String file, String key, Map table, String arr[][]) throws SQLException, NamingException, JDOMException, IOException{
 	    
 	    int updateCount = 0;	    
@@ -398,38 +335,9 @@ public class AbstractDAO {
 		
 		int[] res = wrapper.executeBatch();
 		for(int r:res) 	updateCount += r;
-		
-		
-/*		for( int i = 0 ; arr != null &&i < arr.length ; i++){
-			
-			QueryFarm qfarm = new QueryFarm(query, retable, arr[i]);
-			
-			query = qfarm.getQuery();
-			arr[i] = qfarm.getParams();
-			
-		    for( int j = 0 ; j < arr[i].length ; j++){
-		        wrapper.setObject(j+1, arr[i][j]);
-		    }
-		    updateCount += wrapper.executeUpdate();
-		}*/		
 	    return updateCount;
 	}
 	
-	
-
-	/**
-	 *?????? ???ν??? ?????? ????? ??
-	 * @param wrapper
-	 * @param file
-	 * @param key
-	 * @param arr
-	 * @return
-	 * @throws LQueryException
-	 * @throws SQLException
-	 * @throws NamingException
-	 * @throws IOException 
-	 * @throws JDOMException 
-	 */
 	public String execute( Wrapper wrapper, String file, String key, String arr[] ) throws SQLException, NamingException, JDOMException, IOException {
 		
 		String out = null;		

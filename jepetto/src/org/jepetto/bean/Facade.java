@@ -11,6 +11,7 @@ import javax.naming.NamingException;
 
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
+import org.json.simple.JSONArray;
 
 //import org.jepetto.sql.Wrapper;
 
@@ -19,6 +20,10 @@ public interface Facade  {
 	 public java.lang.String execute(java.lang.String a,java.lang.String b,java.lang.String c,java.lang.String [] d) throws SQLException, NamingException, JDOMException, IOException;
 	 public Document executeQuery(java.lang.String a,java.lang.String b,java.lang.String c,java.util.Map d,java.lang.String [] e) throws SQLException, NamingException, JDOMException, IOException;
 	 public Document executeQuery(String dataSource, String file, String key, Map table,String arr[], int clobColumnIndex[]) throws  SQLException, NamingException, JDOMException, IOException;
+	 
+	 public JSONArray executeQueryJ(java.lang.String a,java.lang.String b,java.lang.String c,java.util.Map d,java.lang.String [] e) throws SQLException, NamingException, JDOMException, IOException;
+	 public JSONArray executeQueryJ(String dataSource, String file, String key, Map table,String arr[], int clobColumnIndex[]) throws  SQLException, NamingException, JDOMException, IOException;
+	 
 	 
 	 public int executeUpdate(java.lang.String a,java.lang.String b,java.lang.String c,java.util.Map d,java.lang.String [][] e) throws SQLException, NamingException, JDOMException, IOException;
 	 public int executeUpdate(java.lang.String a,java.lang.String b,java.lang.String c,java.util.Map d,java.lang.String [] e) throws SQLException, NamingException, JDOMException, IOException;
