@@ -1,6 +1,6 @@
 package org.jepetto.util;
 
-import java.util.Base64;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.File;
@@ -9,37 +9,23 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-//import java.net.HttpURLConnection;
-//import java.net.URL;
+import java.text.NumberFormat;
+import java.util.Base64;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Vector;
 import javax.servlet.http.HttpServletResponse;
-//
-
 import org.apache.commons.io.FileUtils;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfWriter;
 
-
-//import com.certicom.net.ssl.internal.HttpURLConnection;
-
-
-/*
-import java.net.InetAddress;
-import laf.core.exception.LSysException;
-import laf.core.log.LLog;
-import com.ecs.digi.sec.Crypt;
-import java.net.UnknownHostException;
-*/
-
 public class Util {
-	
-
 
 	public static String url(javax.servlet.http.HttpServletRequest req,String key){
 		String value = null;
@@ -293,7 +279,7 @@ public class Util {
 			out = res.getOutputStream();
 			in = getInputStream(path,fileName);
 			
-			write(in,out);
+			copy(in,out);
 			
 		}catch(IOException e){
 			throw e;
@@ -328,7 +314,7 @@ public class Util {
 	 * @param out
 	 * @throws IOException
 	 */
-	public static void write(InputStream in,OutputStream out) throws IOException{
+	public static void copy(InputStream in,OutputStream out) throws IOException{
 	    
 	    DataInputStream dis = new DataInputStream(in);
 	    java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
@@ -370,6 +356,7 @@ public class Util {
 	        }
 	    }
 	}
+	
 	
 	public static void write(String path, String file, byte contents[] ) throws IOException{
 	    FileOutputStream fin = new FileOutputStream(new File(path, file));
@@ -587,7 +574,7 @@ public class Util {
        * @return
        */
 	
-	public static String addZero(String str, int size) {
+	public static String addZeroAsPrefix(String str, int size) {
 	    String result = "";
 	
 	    if(size < str.length()) return str;
@@ -632,69 +619,27 @@ public class Util {
 	    return str;
 	}    
       
-	/**
-	 * 주언진 값을 주어진 포맷으로 변환한다
-	 * @param value
-	 * @param format
-	 * @return
-	 */
-	public static String mask(String value, String format){
-	      
-		String _value = "";
-		int index = 0;
-		
-		try{
-		    
-		    if( format.endsWith("#,###")) format = moneymask(value,format);
-		    
-			for( int i = 0 ; i < format.length() ; i++){
-			      
-			    if( String.valueOf(format.charAt(i)).equals("#")  ){
-			        _value += value.charAt(index);
-			        index++;
-			              
-			    }else{
-			        _value += format.charAt(i);
-			    }
-			          
-			}
-			
-		}catch(StringIndexOutOfBoundsException e){
-		    return null;
-		}catch(NullPointerException e){
-		    return null;
-		}
-		return _value;
+	
+	
+	public static String currenyMask(String value, Locale locale) {
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+        String formattedMoney = currencyFormatter.format(Integer.parseInt(value));	
+        return formattedMoney;	
 	}
 	
-	/**
-	 * 주어진 값에 맞는 통화형으로 변환한다
-	 * ex> 1234 -> #,####
-	 *     12345 -> ##,### 
-	 * @param value
-	 * @param format
-	 * @return
-	 */
-	public static String moneymask( String value , String format ) throws NullPointerException,StringIndexOutOfBoundsException {
-		int length = value.length();
-		int mod	= length/3;
-		int _mod	= length%3;
-		if( _mod != 0 ) mod++;
-		 
-		StringBuffer sb = new StringBuffer();
-		for( int i = 0 ; i < mod ; i++){
-		    sb.append("###,");
-		}
-		
-		String s = "";
-		if( _mod == 0 ) {
-		    return sb.toString().substring( 0, sb.length()-1 );
-		} else {
-		    _mod = 3- _mod;
-		    s = sb.toString().substring(_mod);
-		    return s.substring(0,s.length() - 1);
-		}
+	public static String currenyMask(long value, Locale locale) {
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+        String formattedMoney = currencyFormatter.format(value);	
+        return formattedMoney;	
 	}
+	
+	public static String currenyMask(double value, Locale locale) {
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+        String formattedMoney = currencyFormatter.format(value);	
+        return formattedMoney;	
+	}
+	
+	
     
     /**
      * 
@@ -785,47 +730,63 @@ public class Util {
 		
 	}
 	
+ 	public static String inputStreamToString(InputStream in) throws IOException {
+ 		String value = "";
+ 		InputStreamReader isr = null;
+ 		BufferedReader reader =null;
+ 		isr = new InputStreamReader(in);
+ 		reader = new BufferedReader(isr);
+ 		StringBuffer buffer = new StringBuffer();
+ 		try {
+	 		while(value != null) {
+	 			buffer.append(value+"\n");
+	 			value = reader.readLine();
+	 			//System.out.println(value);
+	 		}
+ 		}catch(IOException e) {
+ 			//e.printStackTrace();
+ 			throw e;
+ 		}finally{
+ 			try {
+ 				in.close();
+ 			}catch(Exception e) {}
+ 			try {
+ 				isr.close();
+ 			}catch(Exception e) {}			
+ 			try {
+ 				reader.close();
+ 			}catch(Exception e) {}				
+ 			
+ 		}
+ 		value = buffer.toString();
+ 		return value;
+ 	}
+ 	
  	
   	
 	public static void main(String args[]){
+		String command ="curl -v http://www.naver.com";
+		command = "curl -Ikv http://www.naver.com"; // getting
+		String delim = " ";
+		ProcessBuilder processBuilder = new ProcessBuilder(command.split(delim));
+		//processBuilder = processBuilder.directory(new File("c:/Users/iiwoo"));
+
+		InputStream in = null;
 		
-		System.out.println("start main");
-		
-		String arr[] = getSplitedStringArr("HCSN.00005442|HCSN.00005436|HCSN.00005435|HCSN.00005433|HCSN.00005430|HCSN.00005429|",null);
-		String shipmentGid = "";
-		for( int i = 0 ; i < arr.length ; i++){
-			//System.out.println(arr[i]);
-			shipmentGid += "'"+arr[i]+"',";
-		}
-		shipmentGid += "''";
-		
-		/*
-		Calendar rightNow = Calendar.getInstance();
-		
-		
-		String cmd			= "python ";
-		String pyOpt		= "D:\\TRP\\GC3\\PYTHON\\ClientUtil.py ";
-		String commandOpt	= "-command ";
-		String commandArg	= "sendXMLFileViaHttpPost ";
-		String urlOpt		= "-url ";
-		String urlArg		= "http://nrotmdev.hansolcsn.com/GC3/glog.integration.servlet.WMServlet ";
-		String fileOpt		= "-fileName ";
-		String fileArg		= "c:\\temp\\soap.xml ";
-		args = new String[]{pyOpt,commandOpt,commandArg,urlOpt,urlArg,fileOpt,fileArg};
-		
-		File file = null;
-		try {
-			file = new File("c:/temp/a.xml");
-			exec(cmd + pyOpt + commandOpt + commandArg + urlOpt + urlArg + fileOpt + fileArg,null, new FileOutputStream(file) );
-			System.out.println("ddd " + file.getPath());
-		} catch (FileNotFoundException e) {
+		String value = "";
+		int exitCode = 0;
+		try {	
+			Process process = Runtime.getRuntime().exec(command);
+			in = process.getInputStream();
+			value = inputStreamToString(in);
+			//process.w
+			exitCode = process.exitValue();
+			//}
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//*/
-		
-		System.out.println("end of main");
-		      
+		System.out.println(value);
 	}
   	
 }
