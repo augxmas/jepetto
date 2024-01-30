@@ -126,12 +126,10 @@ public class SendMailFacade
 		props.put("mail.smtp.host", host);
 		props.put("mail.port", port );
 		props.put("mail.smtp.port", port );
-		props.put("mail.smtp.auth", "false");
+		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable","true");
-		props.put("mail.smtp.ssl.trust", host );
-		//props.put("mail.smtp.ssl.enable", "true"); 
-		props.put("mail.smtp.ssl.enable", "false"); 
-		props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+		props.put("mail.smtp.ssl.trus", host );
+		props.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
 
 
 		
@@ -293,7 +291,7 @@ public class SendMailFacade
 	 * @throws MessagingException
 	 */
 	private void setText(MimeBodyPart mbp, String text) throws MessagingException{
-		mbp.setContent(text,"text/html; charset=\"utf-8\""); 
+		mbp.setContent(text,"text/html; charset=\"euc-kr\""); 
 	}
 	
 	/**
@@ -348,7 +346,7 @@ public class SendMailFacade
 	private void setSubject() throws MessagingException{
 		
 		try {
-			msg.setSubject(MimeUtility.encodeText(subject, "utf-8", "B"));
+			msg.setSubject(MimeUtility.encodeText(subject, "euc-kr", "B"));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -365,7 +363,7 @@ public class SendMailFacade
 		FileDataSource fds = new FileDataSource(filename);
 		mbp.setDataHandler( new DataHandler(fds) );
 		// 占쎈엘占쎈쐭占쎈퓠 占쎈솁占쎌뵬占쎌뵠�뵳袁⑹뱽 占쎄쉭占쎈샒占쎈막占쎈르 base64占쎌굨占쎄묶嚥∽옙 獄쏆꼶諭띰옙�뻻.
-		//mbp2.setFileName(MimeUtility.encodeText(fds.getName(), "utf-8","B"));
+		//mbp2.setFileName(MimeUtility.encodeText(fds.getName(), "euc-kr","B"));
 		mbp.setFileName(fds.getName());
 	}
 	
@@ -384,7 +382,7 @@ public class SendMailFacade
 		
 		mbps[index].setHeader("Content-Type", "multipart/mixed");
 		mbps[index].setDataHandler(new DataHandler(fds));
-		mbps[index].setFileName(MimeUtility.encodeText(realfilename, "utf-8","B"));
+		mbps[index].setFileName(MimeUtility.encodeText(realfilename, "euc-kr","B"));
 	}
 	
 	/**
@@ -406,7 +404,7 @@ public class SendMailFacade
 		mbps[index].setDataHandler(new DataHandler(fds));
 
 		
-		//mbps[index].setFileName(MimeUtility.encodeText(realfilename, "utf-8","Q"));
+		//mbps[index].setFileName(MimeUtility.encodeText(realfilename, "euc-kr","Q"));
 		mbps[index].setFileName(Util.en(realfilename));
 		
 		//mbps[index].attachFile(file);
@@ -420,13 +418,13 @@ public class SendMailFacade
 		//msg.setContent(text,"text/html");
 		/*
 		try {
-			text = MimeUtility.encodeText(text, "utf-8", "B");
+			text = MimeUtility.encodeText(text, "euc-kr", "B");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		*/
-		msg.setContent(text,"text/html; charset=\"utf-8\""); 
+		msg.setContent(text,"text/html; charset=\"euc-kr\""); 
 	}
 	
 	/**
@@ -590,32 +588,9 @@ public class SendMailFacade
 	
 	public static void main(String args[]){
 		try{
-			
-			String id = "augxmas@gmail.com";
-			String passwd = "1qaz2wSX"; // no more
-			passwd = "tizntwhshzvfkarc";
-			String from = "no-reply@korsec.co.kr";
-			String cc = "kimch@monorama.kr";
-			String to = "hyeon058@naver.com";
-			//to = "tspark@castingn.com";
-			//content = buffer.toString();
-			String content = "발급외었오";
-			String subject = "노출하지 마시오";
-			int filesize = 1;
-			SendMailFacade m;
-			try {
-				m = new SendMailFacade("smtp.gmail.com", "465", id, passwd, subject, from, to, "kimch@monorama.kr",null, content, filesize);
-				m = new SendMailFacade("192.168.10.67", "7025", null, null, subject, from, to, cc,null, content, filesize);
-				m.setHeader(null, null);
-				String srcDir = "c:/Users/iiwoo/temp/";
-				m.setFileDataSource( srcDir,"ssl.zip","ssl.zip",0);				
-				m.send();
-			} catch (MessagingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+
 			/*
+			
 			String to  = "augxmas@gmail.com";//,sbang123@shinbiro.com";
 			String cc  = "";
 			String bcc = "";//,sbang123@shinbiro.com";
@@ -626,19 +601,18 @@ public class SendMailFacade
 			String from = "augxmas@gmail.com";
 			
 			String id = "augxmas@gmail.com";
-			String passwd = "";
+			String passwd = "rotc1629";
 			int filesize =1;
 			// 23 smtp port, id, password
 			SendMailFacade m = new SendMailFacade("smtp.gmail.com","25",id,passwd,sub,from,to,cc,bcc,text,filesize);
 			m.setHeader(null,null);
-			String srcDir = "c:/Users/iiwoo/temp/";
-			m.setFileDataSource( srcDir,"ssl.zip","ssl.zip",0);
+			m.setFileDataSource( "C:/","rc4.log","rc4.log",0);
 			m.send();
 			//*/
 
 			//String to  = "jiyoung1.park@doosan.com";//,sbang123@shinbiro.com";
 
-			/*
+			
 			String names[] = new String[] {
 						"김방영",
 						"김성종",
@@ -709,8 +683,8 @@ public class SendMailFacade
 
 		}catch(IOException e){
 			e.printStackTrace();
-		//}catch(MessagingException e){
-		//	e.printStackTrace();
+		}catch(MessagingException e){
+			e.printStackTrace();
 		}
 
 		System.out.println("end of main");

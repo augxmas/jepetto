@@ -850,13 +850,13 @@ public class XcelWriter {
 			
 			excel.createCells(excel.createRow(3),6);
 		
-			//excel.mergeCell(0,0,1,0);
-			//excel.mergeCell(0,2,1,2);
-			//excel.mergeCell(0,4,1,4);
+			excel.mergeCell(0,0,1,0);
+			excel.mergeCell(0,2,1,2);
+			excel.mergeCell(0,4,1,4);
 		
-			//excel.mergeCell(2,0,2,1);
-			//excel.mergeCell(2,2,2,3);
-			//excel.mergeCell(2,4,2,5);
+			excel.mergeCell(2,0,2,1);
+			excel.mergeCell(2,2,2,3);
+			excel.mergeCell(2,4,2,5);
 		
 			excel.setCellValue(excel.getRow(0), 0, "00,10");
 			excel.setCellValue(excel.getRow(0), 1, "01");		
