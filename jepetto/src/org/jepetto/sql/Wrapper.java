@@ -68,7 +68,7 @@ public class Wrapper {
 	private String datasource;
 	
 	/**
-	 * ????? ????? datasource ?? ???? connection pool?? ?????. 
+	 * META-INF/context.xml datasource's name 
 	 * @param datasource
 	 */
 	public Wrapper(String datasource){
@@ -516,7 +516,7 @@ out.println(w.getCString(2));  // ???琯?? out ?????? ?????? ?琯????? ????? ???
 	 */
     public void executeQuery()throws SQLException{
    		cat.info(pStmt.getQueryString());
-   		System.out.println(pStmt.getQueryString());
+   		//System.out.println(pStmt.getQueryString());
    		rset = pStmt.executeQuery();
     }
     
