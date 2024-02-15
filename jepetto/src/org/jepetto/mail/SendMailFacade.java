@@ -128,7 +128,7 @@ public class SendMailFacade
 		props.put("mail.smtp.port", port );
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable","true");
-		props.put("mail.smtp.ssl.trus", host );
+		props.put("mail.smtp.ssl.trust", host );
 		props.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
 
 
@@ -291,7 +291,7 @@ public class SendMailFacade
 	 * @throws MessagingException
 	 */
 	private void setText(MimeBodyPart mbp, String text) throws MessagingException{
-		mbp.setContent(text,"text/html; charset=\"euc-kr\""); 
+		mbp.setContent(text,"text/html; charset=\"utf-8\""); 
 	}
 	
 	/**
@@ -346,7 +346,7 @@ public class SendMailFacade
 	private void setSubject() throws MessagingException{
 		
 		try {
-			msg.setSubject(MimeUtility.encodeText(subject, "euc-kr", "B"));
+			msg.setSubject(MimeUtility.encodeText(subject, "utf-8", "B"));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -546,7 +546,8 @@ public class SendMailFacade
 	 */
 	
 	private void setRecipients() throws AddressException,MessagingException{
-		String arr[] = Util.getSplitedStringArr(to , "," );
+		//String arr[] = Util.getSplitedStringArr(to , "," );
+		String arr[]  = to.split(",");
 		InternetAddress[] address = new InternetAddress[arr.length];
 		for( int i = 0 ; i < address.length ; i++){
 			address[i] = new InternetAddress(arr[i]);
@@ -562,7 +563,7 @@ public class SendMailFacade
 	 */
 	
 	private void setRecipientsBCC() throws AddressException,MessagingException{
-		String arr[] = Util.getSplitedStringArr(bcc , "," );
+		String arr[] = bcc.split(",");
 		InternetAddress[] address = new InternetAddress[arr.length];
 		for( int i = 0 ; i < address.length ; i++){
 			address[i] = new InternetAddress(arr[i]);

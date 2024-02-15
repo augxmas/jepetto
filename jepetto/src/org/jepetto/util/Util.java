@@ -13,17 +13,28 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.FileUtils;
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -63,7 +74,7 @@ public class Util {
 		return str;
 	}
 
-	public static String url(String key, String value) {
+	public static String urlQuote(String key, String value) {
 		String url = "";
 		try {
 			StringBuffer buffer = new StringBuffer("&");
@@ -230,6 +241,8 @@ public class Util {
 
 		return result;
 	}
+	
+	
 
 	public static String[] split(String str, String delim) {
 		String arr[] = str.split(delim);
@@ -816,47 +829,218 @@ public class Util {
 
 	}
 
+	public static String send(String METHOD, String url, Map<String, String> headers)  throws IllegalStateException, IOException {
+		HttpURLConnection con = null;
+		URL _url = null;
+
+		OutputStreamWriter osWriter = null;
+		OutputStream out = null;
+
+		BufferedReader reader = null;
+		InputStreamReader inWriter = null;
+		InputStream in = null;
+
+		String str = "";
+
+		try {
+			_url = new URL(url);
+			con = (HttpURLConnection) _url.openConnection();
+			con.setRequestMethod(METHOD);
+			con.setConnectTimeout(10 * 1000);
+
+			con.setRequestProperty("Content-Type", "text/html; charset=UTF-8");
+			//con.setRequestProperty("Accept", Constants.contentType);
+
+			String _key = null;
+			String _value = null;
+			try {
+				Set<String> set = headers.keySet();
+				Iterator<String> iter = set.iterator();
+
+				while (iter.hasNext()) {
+					_key = (String) iter.next();
+					_value = (String) headers.get(_key);
+					con.setRequestProperty(_key, _value);
+				}
+			} catch (Exception e) {
+				//e.printStackTrace();
+			} // */
+
+			// Map _map = con.getHeaderFields();
+
+			try {
+				con.setDoOutput(true);
+			} catch (IllegalStateException e) {
+				//e.printStackTrace();
+				throw e;
+			}
+			try {
+
+				con.setDoInput(true);
+			} catch (IllegalStateException e) {
+				//e.printStackTrace();
+				throw e;
+			}
+			try {
+				con.connect();
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+				throw e;
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+
+			out = con.getOutputStream();
+			osWriter = new OutputStreamWriter(out);
+			
+			try {
+				in = con.getInputStream();
+				// input parameters values wrong
+			} catch (IOException e) {
+				// e.printStackTrace();
+				in = con.getErrorStream();
+			}
+			inWriter = new InputStreamReader(in);
+			reader = new BufferedReader(inWriter);
+
+			String dump = "";
+			StringBuffer buffer = new StringBuffer();
+			while (dump != null) {
+				buffer.append(dump);
+				dump = reader.readLine();
+			}
+			str = buffer.toString();
+
+		} catch (IOException e) {
+			throw e;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				con.disconnect();
+			}catch(Exception e) {
+				
+			}
+			try {
+				out.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+			}
+			try {
+				osWriter.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+			}
+			
+		}
+	
+		return str;
+	}
+	
+	
+	public static String long2CurrentDate( long now) {
+	  
+	  //	System.out.println(today);
+	  
+	  DateFormat df = new SimpleDateFormat("yyyy:MM:dd-HH:mm:ss"); // HH=24h, hh=12h
+	  String str = df.format(now);
+	  /*
+	  System.out.println(str); 
+	  Date date = new Date(today);
+	  System.out.println(date);
+	  //*/
+	  return str;
+	}	
+
 	public static void main(String args[]) {
+
+		/*
+		try {
+			String str = Util.send( "GET", "http://xvideos51.com" ,  null);
+			System.out.println(str);
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//*/
+		/*
+		try {
+			String str = Util.send( "POST", "http://xvideos51.com" ,  null);
+			System.out.println(str);
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("end of main");
+		//*/
 		
+		try {
+			String str = Util.send( "GET", "http://www.backwon.kr" ,  null);
+			System.out.println(str);
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("end of main");
+		
+		
+		/*
+		//SSLHandshakeException, ValidationException 
+		try {
+			String str = Util.send( "GET", "https://xvideos51.com" ,  null);
+			System.out.println(str);
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		System.out.println("end of main");
+		//*/
+
+		 /*
+		//SSLHandshakeException, ValidationException
+		try {
+			String str = Util.send( "POST", "https://xvideos51.com" ,  null);
+			System.out.println(str);
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		System.out.println("end of main");
+		//*/
+
+
+		
+		
+		/*
 		String srcDir = args[0];
 		String targetDir = args[1];
 		String zipFileName = args[2];
-		
+
 		try {
 			zip(srcDir, targetDir, zipFileName);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		/*
-		String command = "curl -v http://www.naver.com";
-		command = "curl -Ikv http://www.naver.com"; // getting
-		String delim = " ";
-		ProcessBuilder processBuilder = new ProcessBuilder(command.split(delim));
-		// processBuilder = processBuilder.directory(new File("c:/Users/iiwoo"));
-
-		InputStream in = null;
-
-		String value = "";
-		int exitCode = 0;
-		try {
-			Process process = Runtime.getRuntime().exec(command);
-			in = process.getInputStream();
-			value = inputStreamToString(in);
-			// process.w
-			exitCode = process.exitValue();
-			// }
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(value);
 		//*/
-		
+
+		/*
+		 * String command = "curl -v http://www.naver.com"; command =
+		 * "curl -Ikv http://www.naver.com"; // getting String delim = " ";
+		 * ProcessBuilder processBuilder = new ProcessBuilder(command.split(delim)); //
+		 * processBuilder = processBuilder.directory(new File("c:/Users/iiwoo"));
+		 * 
+		 * InputStream in = null;
+		 * 
+		 * String value = ""; int exitCode = 0; try { Process process =
+		 * Runtime.getRuntime().exec(command); in = process.getInputStream(); value =
+		 * inputStreamToString(in); // process.w exitCode = process.exitValue(); // } }
+		 * catch (IOException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); } System.out.println(value); //
+		 */
+
 	}
 
-
-	
 }
