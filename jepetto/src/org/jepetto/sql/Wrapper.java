@@ -106,8 +106,15 @@ public class Wrapper {
 	public Connection getConnection() throws SQLException,javax.naming.NamingException{
 		
 		ConnectionFactory factory = ConnectionFactory.getInstance();
-		
-		con = factory.getConnection(datasource);
+		try {
+			con = factory.getConnection(datasource);
+		}catch(java.lang.ClassCastException e) {
+			con = factory.getConnection();
+		}catch(SQLException e) {
+			con = factory.getConnection();
+		}catch(NamingException e) {
+			con = factory.getConnection();
+		}
 
 		return con;
 	}
@@ -527,7 +534,7 @@ out.println(w.getCString(2));  // ???琯?? out ?????? ?????? ?琯????? ????? ???
     public int executeUpdate()throws SQLException{
     	int count = -1;
    		cat.info(pStmt.getQueryString());
-   		//System.out.println(pStmt.getQueryString());
+   		System.out.println(pStmt.getQueryString());
    		count = pStmt.executeUpdate();   		
     	return count;
     }

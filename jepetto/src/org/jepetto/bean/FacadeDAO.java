@@ -285,6 +285,7 @@ public class FacadeDAO {
 			count = dao.executeUpdateX(wrapper,file,key,table,arr);
 			dao.commit(wrapper);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			dao.rollback(wrapper);
 			throw e;
 		} catch (NamingException e) {

@@ -8,6 +8,7 @@ encoding//src/org/jepetto/sec/SecureAlgCtr.java=UTF-8
 encoding//src/org/jepetto/sql/QueryReader.java=UTF-8
 encoding//src/org/jepetto/sql/XmlResultSet.java=UTF-8
 encoding//src/org/jepetto/sql/XmlTransfer.java=UTF-8
+encoding//src/org/jepetto/util/Validator.java=UTF-8
 encoding//src/org/jepetto/xls/Xcel2Db.java=UTF-8
 encoding//src/org/jepetto/xls/XcelReader.java=UTF-8
 encoding//src/org/jepetto/xls/XcelWriter.java=UTF-8

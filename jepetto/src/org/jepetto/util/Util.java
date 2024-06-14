@@ -955,6 +955,11 @@ public class Util {
 	}	
 
 	public static void main(String args[]) {
+		
+		char c = 'a';
+		char c1 = 'b';
+		System.out.println(c + c1);
+				
 
 		/*
 		try {

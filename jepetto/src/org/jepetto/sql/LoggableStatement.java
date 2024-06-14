@@ -54,7 +54,7 @@ public class LoggableStatement implements PreparedStatement {
 	public LoggableStatement(Connection connection, String sql) throws SQLException {
    		sqlTemplate = sql;
    		try{
-	        wrappedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+	        wrappedStatement = connection.prepareStatement(sql);//, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
    		}catch(SQLException e){
    			connection.close();
    			throw e;
