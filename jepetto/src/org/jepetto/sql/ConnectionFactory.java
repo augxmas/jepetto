@@ -59,17 +59,17 @@ public class ConnectionFactory {
 		}catch(ClassCastException e) {
 			con = getConnection();
 			con.setAutoCommit(false);
-			//e.printStackTrace();
+			e.printStackTrace();
 			//throw e;
 		}catch(NamingException e) {
 			con = getConnection();
 			con.setAutoCommit(false);
-			//e.printStackTrace();
+			e.printStackTrace();
 			//throw e;
 		}catch (SQLException e) {
 			con = getConnection();
 			con.setAutoCommit(false);
-			//e.printStackTrace();
+			e.printStackTrace();
 			//throw e;
 		}finally {
 			con.setAutoCommit(false);
@@ -81,6 +81,7 @@ public class ConnectionFactory {
 	}
 
 	public Connection getConnection() throws SQLException {
+		System.out.println("callme");
 		Connection con = null;
 		try {
 			con = DriverManager.getConnection(url, user, passwd);
@@ -95,6 +96,8 @@ public class ConnectionFactory {
 			con = DriverManager.getConnection(url);
 			
 		}
+		
+		System.out.println(con.isClosed());
 		
 		return con;
 	}

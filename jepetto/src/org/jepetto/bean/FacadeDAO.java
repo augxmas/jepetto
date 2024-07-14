@@ -226,6 +226,7 @@ public class FacadeDAO {
 		    }
 		    dao.commit(wrapper);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			dao.rollback(wrapper);
 			throw e;
 		} catch (NamingException e) {

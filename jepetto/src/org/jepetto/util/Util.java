@@ -2,6 +2,7 @@ package org.jepetto.util;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,10 +21,12 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -34,12 +37,38 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONObject;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfWriter;
 
 public class Util {
+
+	public static Integer[] random(int from, int to) {
+		int size = to - from + 1;
+
+		// Create an array to store numbers from 1 to 200
+		Integer[] array = new Integer[size];
+		for (int i = 0; i < size; i++) {
+			array[i] = i + 1;
+		}
+
+		// Convert array to a List (because shuffle method works with List)
+		List<Integer> list = Arrays.asList(array);
+
+		// Shuffle the list using Collections.shuffle
+		Collections.shuffle(list);
+
+		// Convert List back to array
+		list.toArray(array);
+
+		/*
+		 * // Print shuffled array for (int number : array) { System.out.println(number
+		 * + " "); } //
+		 */
+		return array;
+	}
 
 	public static String url(javax.servlet.http.HttpServletRequest req, String key) {
 		String value = null;
@@ -241,8 +270,6 @@ public class Util {
 
 		return result;
 	}
-	
-	
 
 	public static String[] split(String str, String delim) {
 		String arr[] = str.split(delim);
@@ -829,7 +856,319 @@ public class Util {
 
 	}
 
-	public static String send(String METHOD, String url, Map<String, String> headers)  throws IllegalStateException, IOException {
+	/**
+	 * REST-API call with JSON
+	 * 
+	 * @param METHOD
+	 * @param url
+	 * @param headers
+	 * @param json
+	 * @return
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	public static String send(String METHOD, String url, Map<String, String> headers, JSONObject json)
+			throws IllegalStateException, IOException {
+		HttpURLConnection con = null;
+		URL _url = null;
+
+		// OutputStreamWriter writer = null;
+		OutputStream out = null;
+
+		BufferedReader reader = null;
+		InputStreamReader inWriter = null;
+		InputStream in = null;
+
+		String str = "";
+
+		try {
+			_url = new URL(url);
+			con = (HttpURLConnection) _url.openConnection();
+			con.setRequestMethod(METHOD);
+			con.setConnectTimeout(10 * 1000);
+			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			// con.setRequestProperty("Content-Type", "text/plain");
+			con.setDoOutput(true);
+
+			String _key = null;
+			String _value = null;
+
+			StringBuffer buffer = new StringBuffer();
+			try {
+				Set<String> set = headers.keySet();
+				Iterator<String> iter = set.iterator();
+
+				while (iter.hasNext()) {
+					_key = (String) iter.next();
+					_value = (String) headers.get(_key);
+					con.setRequestProperty(_key, _value);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} // */
+
+			// Map _map = con.getHeaderFields();
+
+			try {
+				con.setDoOutput(true);
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+				throw e;
+			}
+			try {
+
+				con.setDoInput(true);
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+				throw e;
+			}
+			try {
+				con.connect();
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+				throw e;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			out = con.getOutputStream();
+
+			try {
+				out = new DataOutputStream(con.getOutputStream());
+				// out.write(buffer.toString().getBytes());
+				out.write(json.toJSONString().getBytes());
+				out.flush();
+			} catch (IOException e) {
+
+			}
+
+			try {
+				in = con.getInputStream();
+				// input parameters values wrong
+			} catch (IOException e) {
+				e.printStackTrace();
+				in = con.getErrorStream();
+			}
+			inWriter = new InputStreamReader(in);
+			reader = new BufferedReader(inWriter);
+
+			String dump = "";
+			buffer = new StringBuffer();
+			while (dump != null) {
+				buffer.append(dump);
+				dump = reader.readLine();
+			}
+			str = buffer.toString();
+
+		} catch (IOException e) {
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				con.disconnect();
+			} catch (Exception e) {
+
+			}
+			try {
+				out.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		return str;
+	}
+
+	public static String leftPad(String originalString, String padChar, int length ) {
+		String str = null;
+		try {
+			originalString = originalString.replace("\n", "").replace("\r", "");
+			originalString = originalString.substring(0, length);
+			StringBuilder sb = new StringBuilder();
+			sb.append(originalString);
+			while (sb.length() < length) {
+				sb.append(padChar);
+			}
+			str = sb.toString();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+		return str;
+
+	}
+
+	public static String rightPad(String originalString, String padChar, int length ) {
+		String str = null;
+		try {
+			originalString = originalString.replace("\n", "").replace("\r", "");
+			originalString = originalString.substring(0, length);
+
+			StringBuilder sb = new StringBuilder();
+			while (sb.length() + originalString.length() < length) {
+				sb.append(padChar);
+			}
+			sb.append(originalString);
+			str = sb.toString();
+
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+		return str;
+
+	}
+
+	/**
+	 * 
+	 * form format integration
+	 * 
+	 * @param METHOD   post or get
+	 * @param url      end point
+	 * @param headers  request header
+	 * @param formData form field and data
+	 * @return
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	public static String send(String METHOD, String url, Map<String, String> headers, Map<String, String> formData)
+			throws IllegalStateException, IOException {
+		HttpURLConnection con = null;
+		URL _url = null;
+
+		// OutputStreamWriter writer = null;
+		OutputStream out = null;
+
+		BufferedReader reader = null;
+		InputStreamReader inWriter = null;
+		InputStream in = null;
+
+		String str = "";
+
+		try {
+			_url = new URL(url);
+			con = (HttpURLConnection) _url.openConnection();
+			con.setRequestMethod(METHOD);
+			con.setConnectTimeout(10 * 1000);
+			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			// con.setRequestProperty("Content-Type", "text/plain");
+			con.setDoOutput(true);
+
+			String _key = null;
+			String _value = null;
+
+			StringBuffer buffer = new StringBuffer();
+			try {
+				Set<String> set = formData.keySet();
+
+				Iterator<String> iter = set.iterator();
+
+				while (iter.hasNext()) {
+					_key = (String) iter.next();
+					_value = (String) formData.get(_key);
+					buffer.append(_key);
+					buffer.append("=");
+					buffer.append(_value);
+					buffer.append("&");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} // */
+
+			buffer.append("1=1");
+			_key = null;
+			_value = null;
+
+			try {
+				Set<String> set = headers.keySet();
+				Iterator<String> iter = set.iterator();
+
+				while (iter.hasNext()) {
+					_key = (String) iter.next();
+					_value = (String) headers.get(_key);
+					con.setRequestProperty(_key, _value);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} // */
+
+			// Map _map = con.getHeaderFields();
+
+			try {
+				con.setDoOutput(true);
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+				throw e;
+			}
+			try {
+
+				con.setDoInput(true);
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+				throw e;
+			}
+			try {
+				con.connect();
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+				throw e;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			out = con.getOutputStream();
+
+			try {
+				out = new DataOutputStream(con.getOutputStream());
+				out.write(buffer.toString().getBytes());
+				out.flush();
+			} catch (IOException e) {
+
+			}
+
+			try {
+				in = con.getInputStream();
+				// input parameters values wrong
+			} catch (IOException e) {
+				e.printStackTrace();
+				in = con.getErrorStream();
+			}
+			inWriter = new InputStreamReader(in);
+			reader = new BufferedReader(inWriter);
+
+			String dump = "";
+			buffer = new StringBuffer();
+			while (dump != null) {
+				buffer.append(dump);
+				dump = reader.readLine();
+			}
+			str = buffer.toString();
+
+		} catch (IOException e) {
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				con.disconnect();
+			} catch (Exception e) {
+
+			}
+			try {
+				out.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		return str;
+	}
+
+	public static String send(String METHOD, String url, Map<String, String> headers)
+			throws IllegalStateException, IOException {
 		HttpURLConnection con = null;
 		URL _url = null;
 
@@ -849,7 +1188,7 @@ public class Util {
 			con.setConnectTimeout(10 * 1000);
 
 			con.setRequestProperty("Content-Type", "text/html; charset=UTF-8");
-			//con.setRequestProperty("Accept", Constants.contentType);
+			// con.setRequestProperty("Accept", Constants.contentType);
 
 			String _key = null;
 			String _value = null;
@@ -863,7 +1202,7 @@ public class Util {
 					con.setRequestProperty(_key, _value);
 				}
 			} catch (Exception e) {
-				//e.printStackTrace();
+				// e.printStackTrace();
 			} // */
 
 			// Map _map = con.getHeaderFields();
@@ -871,14 +1210,14 @@ public class Util {
 			try {
 				con.setDoOutput(true);
 			} catch (IllegalStateException e) {
-				//e.printStackTrace();
+				// e.printStackTrace();
 				throw e;
 			}
 			try {
 
 				con.setDoInput(true);
 			} catch (IllegalStateException e) {
-				//e.printStackTrace();
+				// e.printStackTrace();
 				throw e;
 			}
 			try {
@@ -886,13 +1225,13 @@ public class Util {
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
 				throw e;
-			}catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 			out = con.getOutputStream();
 			osWriter = new OutputStreamWriter(out);
-			
+
 			try {
 				in = con.getInputStream();
 				// input parameters values wrong
@@ -913,139 +1252,104 @@ public class Util {
 
 		} catch (IOException e) {
 			throw e;
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			try {
 				con.disconnect();
-			}catch(Exception e) {
-				
+			} catch (Exception e) {
+
 			}
 			try {
 				out.close();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				//e.printStackTrace();
+				// e.printStackTrace();
 			}
 			try {
 				osWriter.close();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				//e.printStackTrace();
+				// e.printStackTrace();
 			}
-			
+
 		}
-	
+
 		return str;
 	}
-	
-	
-	public static String long2CurrentDate( long now) {
-	  
-	  //	System.out.println(today);
-	  
-	  DateFormat df = new SimpleDateFormat("yyyy:MM:dd-HH:mm:ss"); // HH=24h, hh=12h
-	  String str = df.format(now);
-	  /*
-	  System.out.println(str); 
-	  Date date = new Date(today);
-	  System.out.println(date);
-	  //*/
-	  return str;
-	}	
 
-	public static void main(String args[]) {
-		
-		char c = 'a';
-		char c1 = 'b';
-		System.out.println(c + c1);
-				
+	public static String long2CurrentDate(long now) {
 
+		// System.out.println(today);
+
+		DateFormat df = new SimpleDateFormat("yyyy:MM:dd-HH:mm:ss"); // HH=24h, hh=12h
+		String str = df.format(now);
 		/*
-		try {
-			String str = Util.send( "GET", "http://xvideos51.com" ,  null);
-			System.out.println(str);
-		} catch (IllegalStateException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//*/
-		/*
-		try {
-			String str = Util.send( "POST", "http://xvideos51.com" ,  null);
-			System.out.println(str);
-		} catch (IllegalStateException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("end of main");
-		//*/
-		
-		try {
-			String str = Util.send( "GET", "http://www.backwon.kr" ,  null);
-			System.out.println(str);
-		} catch (IllegalStateException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("end of main");
-		
-		
-		/*
-		//SSLHandshakeException, ValidationException 
-		try {
-			String str = Util.send( "GET", "https://xvideos51.com" ,  null);
-			System.out.println(str);
-		} catch (IllegalStateException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-		System.out.println("end of main");
-		//*/
-
-		 /*
-		//SSLHandshakeException, ValidationException
-		try {
-			String str = Util.send( "POST", "https://xvideos51.com" ,  null);
-			System.out.println(str);
-		} catch (IllegalStateException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-		System.out.println("end of main");
-		//*/
-
-
-		
-		
-		/*
-		String srcDir = args[0];
-		String targetDir = args[1];
-		String zipFileName = args[2];
-
-		try {
-			zip(srcDir, targetDir, zipFileName);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//*/
-
-		/*
-		 * String command = "curl -v http://www.naver.com"; command =
-		 * "curl -Ikv http://www.naver.com"; // getting String delim = " ";
-		 * ProcessBuilder processBuilder = new ProcessBuilder(command.split(delim)); //
-		 * processBuilder = processBuilder.directory(new File("c:/Users/iiwoo"));
-		 * 
-		 * InputStream in = null;
-		 * 
-		 * String value = ""; int exitCode = 0; try { Process process =
-		 * Runtime.getRuntime().exec(command); in = process.getInputStream(); value =
-		 * inputStreamToString(in); // process.w exitCode = process.exitValue(); // } }
-		 * catch (IOException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); } System.out.println(value); //
+		 * System.out.println(str); Date date = new Date(today);
+		 * System.out.println(date); //
 		 */
-
+		return str;
 	}
+
+	// public static void main(String args[]) {
+
+	/*
+	 * char c = 'a'; char c1 = 'b'; System.out.println(c + c1);
+	 * 
+	 * try { String str = Util.send( "GET", "http://xvideos51.com" , null);
+	 * System.out.println(str); } catch (IllegalStateException | IOException e) { //
+	 * TODO Auto-generated catch block e.printStackTrace(); } //
+	 */
+	/*
+	 * try { String str = Util.send( "POST", "http://xvideos51.com" , null);
+	 * System.out.println(str); } catch (IllegalStateException | IOException e) { //
+	 * TODO Auto-generated catch block e.printStackTrace(); }
+	 * System.out.println("end of main");
+	 * 
+	 * 
+	 * try { String str = Util.send( "GET", "http://www.backwon.kr" , null);
+	 * System.out.println(str); } catch (IllegalStateException | IOException e) { //
+	 * TODO Auto-generated catch block e.printStackTrace(); }
+	 * System.out.println("end of main");
+	 * 
+	 * 
+	 * 
+	 * //SSLHandshakeException, ValidationException try { String str = Util.send(
+	 * "GET", "https://xvideos51.com" , null); System.out.println(str); } catch
+	 * (IllegalStateException | IOException e) { // TODO Auto-generated catch block
+	 * e.printStackTrace(); } System.out.println("end of main");
+	 * 
+	 * 
+	 * 
+	 * //SSLHandshakeException, ValidationException try { String str = Util.send(
+	 * "POST", "https://xvideos51.com" , null); System.out.println(str); } catch
+	 * (IllegalStateException | IOException e) { // TODO Auto-generated catch block
+	 * e.printStackTrace(); } System.out.println("end of main"); //
+	 */
+
+	/*
+	 * String srcDir = args[0]; String targetDir = args[1]; String zipFileName =
+	 * args[2];
+	 * 
+	 * try { zip(srcDir, targetDir, zipFileName); } catch (IOException e) { // TODO
+	 * Auto-generated catch block e.printStackTrace(); } //
+	 */
+
+	/*
+	 * String command = "curl -v http://www.naver.com"; command =
+	 * "curl -Ikv http://www.naver.com"; // getting String delim = " ";
+	 * ProcessBuilder processBuilder = new ProcessBuilder(command.split(delim)); //
+	 * processBuilder = processBuilder.directory(new File("c:/Users/iiwoo"));
+	 * 
+	 * InputStream in = null;
+	 * 
+	 * String value = ""; int exitCode = 0; try { Process process =
+	 * Runtime.getRuntime().exec(command); in = process.getInputStream(); value =
+	 * inputStreamToString(in); // process.w exitCode = process.exitValue(); // } }
+	 * catch (IOException e) { // TODO Auto-generated catch block
+	 * e.printStackTrace(); } System.out.println(value); //
+	 */
+
+	// }
 
 }
